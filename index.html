@@ -9,65 +9,65 @@
 <style>
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #eeeeee;
+margin: 0;
+font-family: Arial, sans-serif;
+text-align: center;
+background: #eeeeee;
 }
 
 header {
-    background: #111111;
-    color: white;
-    padding: 20px;
+background: #111111;
+color: white;
+padding: 20px;
 }
 
 header h1 {
-    margin: 0;
-    font-size: 28px;
+margin: 0;
+font-size: 28px;
 }
 
 .welcome {
-    padding: 20px 15px;
+padding: 20px 15px;
 }
 
 .welcome h2 {
-    font-size: 26px;
+font-size: 26px;
 }
 
 .welcome p {
-    font-size: 18px;
+font-size: 18px;
 }
 
 .chessboard {
-    width: 320px;
-    height: 320px;
-    margin: 20px auto 35px;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    border: 6px solid #222222;
+width: 320px;
+height: 320px;
+margin: 20px auto 35px;
+display: grid;
+grid-template-columns: repeat(8, 1fr);
+border: 6px solid #222222;
 }
 
 .square {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 28px;
 }
 
 .light {
-    background: #f0d9b5;
+background: #f0d9b5;
 }
 
 .dark {
-    background: #b58863;
+ background: #b58863;
 }
 
 footer {
-    background: #111111;
-    color: white;
-    padding: 15px;
+background: #111111;
+color: white;
+padding: 15px;
 
 font-size: 14px;
 }
@@ -181,183 +181,183 @@ const w = "♔♕♖♗♘♙";
 const b = "♚♛♜♝♞♟";
 
 function iw(x) {
-    return w.includes(x);
+return w.includes(x);
 }
 
 function ib(x) {
-    return b.includes(x);
+return b.includes(x);
 }
 
 function cp(r1, c1, r2, c2) {
-    const rs = Math.sign(r2 - r1);
-    const cs = Math.sign(c2 - c1);
+const rs = Math.sign(r2 - r1);
+const cs = Math.sign(c2 - c1);
 
-    let r = r1 + rs;
-    let c = c1 + cs;
+let r = r1 + rs;
+let c = c1 + cs;
 
-    while (r !== r2 || c !== c2) {
-        if (s[r * 8 + c].textContent.trim() !== "") {
-            return false;
+while (r !== r2 || c !== c2) {
+if (s[r * 8 + c].textContent.trim() !== "") {
+return false;
         }
 
-        r += rs;
-        c += cs;
-    }
+r += rs;
+c += cs;
+}
 
-    return true;
+return true;
 }
 
 s.forEach(function(x) {
-    x.addEventListener("click", function() {
+x.addEventListener("click", function() {
 
-        if (p === null) {
-            if (this.textContent.trim() !== "") {
-                p = this;
-                p.classList.add("selected");
-            }
-            return;
-        }
+if (p === null) {
+if (this.textContent.trim() !== "") {
+p = this;
+p.classList.add("selected");
+}
+return;
+}
 
-        if (this === p) {
-            p.classList.remove("selected");
-            p = null;
-            return;
-        }
+if (this === p) {
+p.classList.remove("selected");
+p = null;
+return;
+ }
 
-        const a = Array.from(s).indexOf(p);
-        const d = Array.from(s).indexOf(this);
+const a = Array.from(s).indexOf(p);
+const d = Array.from(s).indexOf(this);
 
-        const r1 = Math.floor(a / 8);
-        const c1 = a % 8;
-        const r2 = Math.floor(d / 8);
-        const c2 = d % 8;
+const r1 = Math.floor(a / 8);
+const c1 = a % 8;
+const r2 = Math.floor(d / 8);
+const c2 = d % 8;
 
-        const f = p.textContent.trim();
-        const t = this.textContent.trim();
+const f = p.textContent.trim();
+const t = this.textContent.trim();
 
-        if (
-            (iw(f) && iw(t)) ||
-            (ib(f) && ib(t))
-        ) {
-            p.classList.remove("selected");
-            p = null;
-            return;
-        }
+if (
+(iw(f) && iw(t)) ||
+            
+ib(f) && ib(t))
+) {
+p.classList.remove("selected");
+p = null;
+return;
+}
 
-        let ok = false;
+let ok = false;
 
-        if (f === "♘" || f === "♞") {
-            const r = Math.abs(r2 - r1);
-            const c = Math.abs(c2 - c1);
+if (f === "♘" || f === "♞") {
+const r = Math.abs(r2 - r1);
+const c = Math.abs(c2 - c1);
 
-            ok =
-                (r === 2 && c === 1) ||
-                (r === 1 && c === 2);
-        }
+ok =
+(r === 2 && c === 1) ||
+(r === 1 && c === 2);
+}
 
-        if (f === "♖" || f === "♜") {
-            ok =
-                (r1 === r2 || c1 === c2) &&
-                cp(r1, c1, r2, c2);
-        }
+if (f === "♖" || f === "♜") {
+ok =
+(r1 === r2 || c1 === c2) &&
+cp(r1, c1, r2, c2);
+}
 
-        if (f === "♗" || f === "♝") {
-            const r = Math.abs(r2 - r1);
-            const c = Math.abs(c2 - c1);
+if (f === "♗" || f === "♝") {
+const r = Math.abs(r2 - r1);
+const c = Math.abs(c2 - c1);
 
-            ok =
-                r === c &&
-                r !== 0 &&
-                cp(r1, c1, r2, c2);
-        }
+ok =
+r === c &&
+r !== 0 &&
+cp(r1, c1, r2, c2);
+}
 
-        if (f === "♕" || f === "♛") {
-            const r = Math.abs(r2 - r1);
-            const c = Math.abs(c2 - c1);
+if (f === "♕" || f === "♛") {
+const r = Math.abs(r2 - r1);
+const c = Math.abs(c2 - c1);
 
-            ok =
-                (
-                    r1 === r2 ||
-                    c1 === c2 ||
-                    r === c
-                ) &&
-                cp(r1, c1, r2, c2);
-        }
+ok =
+(
+r1 === r2 ||
+c1 === c2 ||
+r === c
+) &&
+cp(r1, c1, r2, c2);
+}
 
-        if (f === "♔" || f === "♚") {
-            const r = Math.abs(r2 - r1);
-            const c = Math.abs(c2 - c1);
+if (f === "♔" || f === "♚") {
+const r = Math.abs(r2 - r1);
+const c = Math.abs(c2 - c1);
 
-            ok =
-                r <= 1 &&
-                c <= 1 &&
-                (r !== 0 || c !== 0);
-        }
+ok =
+r <= 1 &&
+c <= 1 &&
+(r !== 0 || c !== 0);
+}
 
-        if (f === "♙") {
-            if (
-                c1 === c2 &&
-                r2 === r1 - 1 &&
-                t === ""
-            ) {
-                ok = true;
-            }
+if (f === "♙") {
+if (
+c1 === c2 &&
+r2 === r1 - 1 &&
+t === ""
+) {
+ok = true;
+}
 
-            if (
-                Math.abs(c2 - c1) === 1 &&
-                r2 === r1 - 1 &&
-                ib(t)
-            ) {
-                ok = true;
-            }
+if (
+Math.abs(c2 - c1) === 1 &&
+r2 === r1 - 1 &&
+ib(t)
+) {
+ok = true;
+)
 
-            if (
-                c1 === c2 &&
-                r1 === 6 &&
-                r2 === 4 &&
-                s[(r1 - 1) * 8 + c1].textContent.trim() === "" &&
-                t === ""
-            ) {
-                ok = true;
-            }
-        }
+if (
+c1 === c2 &&
+r1 === 6 &&
+r2 === 4 &&
+s[(r1 - 1) * 8 + c1].textContent.trim() === "" &&
+t === ""
+) {
+ok = true;
+}
+}
 
-        if (f === "♟") {
-            if (
-                c1 === c2 &&
-                r2 === r1 + 1 &&
-                t === ""
-            ) {
-                ok = true;
-            }
+if (f === "♟") {
+if (
+c1 === c2 &&
+r2 === r1 + 1 &&
+t === ""
+) {
+ok = true;
+}
 
-            if (
-                Math.abs(c2 - c1) === 1 &&
-                r2 === r1 + 1 &&
-                iw(t)
-            ) {
-                ok = true;
-            }
+if (
+Math.abs(c2 - c1) === 1 &&
+r2 === r1 + 1 &&
+iw(t)
+) {
+ok = true;
+}
 
-            if (
-                c1 === c2 &&
-                r1 === 1 &&
-                r2 === 3 &&
-                s[(r1 + 1) * 8 + c1].textContent.trim() === "" &&
-                t === ""
-            ) {
-                ok = true;
-            }
-        }
+if (
+c1 === c2 &&
+r1 === 1 &&
+r2 === 3 &&
+s[(r1 + 1) * 8 + c1].textContent.trim() === "" &&
+t === ""
+) {
+ok = true;
+}
+}
+if (ok) {
+this.textContent = f;
+p.textContent = "";
+}
 
-        if (ok) {
-            this.textContent = f;
-            p.textContent = "";
-        }
-
-        p.classList.remove("selected");
-        p = null;
-    });
+p.classList.remove("selected");
+p = null;
+});
 });
 </script>
 
