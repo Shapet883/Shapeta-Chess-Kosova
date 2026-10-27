@@ -1,1 +1,4193 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+<title>ÇUBRELI CHESS KOSOVA</title>
+<style>
+#gameResult {
+font-size: 10px;
+font-weight: bold;
+margin: 14px 0;
+padding: 10px 22px;
+display: inline-block;
+border: 2px solid #ffffff;
+border-radius: 14px;
+background: #333333;
+color: #ffffff;
+min-height: 20px;
+box-shadow: 0 0 12px rgba(255,255,255,0.15);
+text-align: center;
+}
+ #gameResult:empty {
+display: none;
+}
+body {  
+    margin: 0;
+    background: #222;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+      h1 {
+    margin: 20px 0;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0;
+    text-shadow:
+    2px 2px 4px #000,
+    0 0 8px rgba(255,255,255,0.15);
 
+display: flex;
+align-items: center;
+justify-content: center;
+width: 100%;
+max-width: 100%;
+padding: 0 5px;
+box-sizing: border-box;
+transform: none;
+}
+.title-flag {
+    width: 32px;
+    height: 22px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.main-title .title-flag:first-of-type {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.main-title .title-flag:last-of-type {
+    margin-left: 12px;
+    margin-right: 35px;
+}
+
+.main-title strong {
+    text-align: center;
+    margin: 0 25px;
+}
+ #subtitle {
+    font-size: 17px;
+    margin-top: -12px;
+    margin-bottom: 12px;
+    font-style: italic;
+    transform: translateX(-3%);
+}
+#gameArea {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 25px;
+    margin: 20px 0 20px 150px;
+}
+
+
+.white-piece {
+    color: #ffffff;
+
+    text-shadow:
+    2px 0 0 #000,
+   -2px 0 0 #000,
+    0 2px 0 #000,
+    0 -2px 0 #000,
+    1px 1px 2px #000,
+    0 0 50px #000;
+}
+
+.black-piece {
+    color: #000000;
+
+    text-shadow:
+       2px 0 0 #fff,
+       -2px 0 0 #fff,
+       0 2px 0 #fff,
+       0 -2px 0 #fff,
+       1px 1px 2px #000,
+       0 0 50px #000;
+}
+
+.selected {
+    background: rgba(255, 215, 80, 0.55) !important;
+
+    box-shadow:
+        inset 0 0 0 3px rgba(255, 255, 255, 0.75),
+        inset 0 0 10px rgba(0, 0, 0, 0.25);
+}
+.in-check {
+    animation: checkSpark 0.7s infinite alternate;
+}
+
+.checkmate {
+    background: #d00000 !important;
+    animation: none !important;
+    box-shadow: none !important;
+}
+
+.checkmate-result {
+    background: #d00000 !important;
+    color: #fff;
+    animation: none !important;
+    border-color: #ff0000 !important;
+box-shadow: none !important;
+}
+@keyframes checkSpark {
+    from {
+box-shadow: inset 0 0 0 2px rgba(255, 0, 0, 0.3);
+    }
+    to {
+        box-shadow:
+        inset 0 0 8px 4px rgba(255, 0, 0, 0.9),
+        0 0 12px 3px rgba(255, 0, 0, 0.7);
+    }
+}
+
+
+/* KOORDINATAT */
+
+.square[data-file]::after {
+    content: attr(data-file);
+    position: absolute;
+    bottom: 3px;
+    right: 4px;
+
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+
+    text-shadow:
+        1px 1px 2px #000,
+        -1px -1px 2px #000,
+        1px -1px 2px #000,
+        -1px 1px 2px #000;
+
+    pointer-events: none;
+}
+
+.square[data-rank]::before {
+    content: attr(data-rank);
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow:
+        1px 1px 2px #000,
+        -1px -1px 2px #000,
+        1px -1px 2px #000,
+        -1px 1px 2px #000;
+    pointer-events: none;
+}
+/* KOORDINATAT KUR ZI ËSHTË POSHTË */
+#board.board-flipped .square[data-file]::after {
+    bottom: 3px;
+    right: 4px;
+    top: auto;
+    left: auto;
+}
+
+#board.board-flipped .square[data-rank]::before {
+    top: 3px;
+    right: 4px;
+    bottom: auto;
+    left: auto;
+}
+/* RROTULLIMI I TABELËS DHE FIGURAVE */
+#board.board-flipped {
+    transform: rotate(180deg);
+}
+
+#board.board-flipped .square {
+    transform: rotate(180deg);
+}
+ #newGameButton {
+    width: 38px;
+    height: 30px;
+    margin: 10px 0 20px 0;
+    padding: 0;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    background: #28a745;
+    color: #fff;
+    box-sizing: border-box;
+    box-shadow: 0 0 8px rgba(255,255,255,0.15);
+    transform: translateY(-40px);
+margin: 0 0 5px 0;
+} 
+
+#newGameButton:hover {
+    background: #28a745;
+}
+#moveHistory {
+    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
+
+    height: 300px;
+    min-height: 300px;
+    max-height: 300px;
+
+    box-sizing: border-box;
+    font-size: 12px;
+    line-height: 1.25;
+
+    margin-top: -40px;
+    padding: 5px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+
+flex-shrink: 0;
+}
+/* TABELA NE KOMPJUTER */
+@media (min-width: 601px) {
+    #board {
+        width: 520px;
+        height: 520px;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        border: 7px solid #111 !important;
+        outline: 3px solid #d4af37 !important;
+        outline-offset: 3px !important;
+        box-sizing: border-box;
+        box-shadow: none !important;
+        margin: 0 auto !important;
+    }
+    .square {
+     width: 100%;
+     height: 100%;
+ 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      font-size: 56px;
+    }
+
+    .light {
+        background: #ddd3c4;
+    }
+
+    .dark {
+        background: #9b7048;
+    }
+
+    .white-piece,
+    .black-piece {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 56px;
+        line-height: 1;
+    }
+}
+@media (max-width: 600px) {
+    #gameArea {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin: 10px auto;
+        width: 100%;
+    }
+
+    #sidePanel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+ #board {
+    display: grid;
+    width: min(500px, 92vw);
+    height: min(500px, 92vw);
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+
+    border: 7px solid #111 !important;
+    border-style: solid !important;
+    outline: 3px solid #d4af37 !important;
+    outline-offset: 3px;
+    box-shadow: none !important;
+
+    margin: 15px 0 0 0;
+    position: relative !important;
+}
+.square {
+    width: auto;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    font-size: clamp(50px, 16vw, 100px);
+    box-sizing: border-box;
+    border: none !important;
+}
+.white-piece,
+.black-piece {
+    font-family: "Times New Roman", serif !important;
+    font-size: clamp(50px, 16vw, 100px) !important;
+    line-height: 1 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.light {
+    background: #ddd3c4 !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+.light.last-move,
+.dark.last-move {
+    background: #d6a96c !important;
+    box-shadow:
+        inset 0 0 0 4px #d6a96c !important,
+        inset 0 0 12px rgba(214, 169, 108, 0.55) !important;
+}
+
+.dark {
+    background: #9b7048 !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+.light.last-move,
+.dark.last-move {
+    background: #d4af37 !important;
+    box-shadow:
+        inset 0 0 0 4px #d4af37 !important,
+        inset 0 0 12px rgba(212, 175, 55, 0.55) !important;
+}
+
+.black-piece {
+    color: #000000 !important;
+    text-shadow:
+        2px 0 0 #fff,
+        -2px 0 0 #fff,
+        0 2px 0 #fff,
+        0 -2px 0 #fff !important;
+}
+
+#blackClock,
+#whiteClock {
+    width: 180px;
+    font-size: 18px;
+    padding: 6px 10px;
+    color: #b98f58 !important;
+}
+@media (min-width: 601px) {
+    #blackClock,
+    #whiteClock {
+        width: 150px !important;
+        max-width: 150px !important;
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+#moveHistory {
+width: min(500px, 92vw);
+height: 220px;
+overflow-y: auto;
+
+    margin: 0;
+    padding: 8px;
+
+    box-sizing: border-box;
+
+    background: #2b2b2b;
+
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+
+    text-align: left;
+
+    font-size: 16px;
+    line-height: 1.7;
+
+    box-shadow:
+    0 0 8px rgba(255,255,255,0.15);
+
+    scrollbar-width: thin;
+}
+#moveHistory strong {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+
+    margin-bottom: 6px;
+    padding-bottom: 8px;
+
+    border-bottom: 1px solid #777;
+
+    letter-spacing: 0.3px;
+}
+#blackClock,
+#whiteClock {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 8px auto;
+    padding: 6px 12px;
+    display: block;
+    width: 150px !important;
+    max-width: 150px !important;
+    box-sizing: border-box;
+    border: none !important;
+    background: #333;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    text-shadow: 0 0 2px #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.15);
+}
+.clock-active {
+    background: #555 !important;
+    border: 2px solid #66b3ff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 12px 3px rgba(102, 179, 255, 0.45);
+}
+#blackFirstMove.first-move-danger,
+#whiteFirstMove.first-move-danger {
+    color: #fff !important;
+    background: #222 !important;
+    border: 2px solid #ff2222 !important;
+    font-weight: bold;
+    text-shadow:
+        0 0 4px #ff2222;
+    box-shadow:
+        0 0 7px rgba(255, 34, 34, 0.9),
+        0 0 12px rgba(255, 34, 34, 0.5);
+}
+.main-title {
+    font-size: 21px;
+    transform: none;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+   text-align: left; 
+overflow: visible;
+}
+
+.main-title strong {
+    margin: 0 4px 0 4px;
+    white-space: nowrap;
+}
+
+.title-flag {
+    width: 38px;
+    height: 27px;
+}
+ .chess-logo {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+vertical-align: middle;
+width: 54px;
+height: 54px;
+margin: 0 5px;
+flex-shrink: 0;
+color: #D4AF37;
+font-size: 42px;
+line-height: 1;
+ }
+.chess-queen {
+    display: inline-block;
+    color: #D4AF37 !important;
+    -webkit-text-fill-color: #D4AF37 !important;
+    font-size: 70px !important;
+    line-height: 1;
+    margin-right: 12px;
+    text-shadow: 0 0 3px #D4AF37;
+}
+ #blackFirstMove.first-move-danger,
+#whiteFirstMove.first-move-danger {
+    color: #fff !important;
+    background: #222 !important;
+    border: 2px solid #ff2222 !important;
+    font-weight: bold;
+    text-shadow:
+        0 0 4px #ff2222;
+    box-shadow:
+        0 0 7px rgba(255, 34, 34, 0.9),
+        0 0 12px rgba(255, 34, 34, 0.5);
+}
+.main-title {
+    font-size: 21px;
+    padding: 0 4px;
+}
+
+.main-title strong {
+    margin: 0 4px;
+    white-space: nowrap;
+}
+
+.title-flag {
+    width: 38px;
+    height: 27px;
+}
+
+#subtitle {
+    font-size: 14px;
+    transform: translateX(0);
+}
+@media (min-width: 700px) {
+    .main-title {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        transform: none;
+        padding-left: 0px;
+padding-right: 10px;
+        overflow: visible;
+        font-size: 24px !important;
+    }
+     .main-title strong {
+       white-space: nowrap;
+       font-size: 24px !important;
+ }
+    
+ .king-emblem {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        margin: 0 5px;
+        flex-shrink: 0;
+        font-family: "Times New Roman", serif;
+        font-size: 48px;
+        line-height: 1;
+        color: #D4AF37;
+        text-shadow: 1px 2px 3px #000;
+    } 
+ 
+ .title-flag {
+        width: 32px;
+        height: 23px;
+        flex-shrink: 0;
+    }
+}
+ 
+ /* ALARMI I KUQ - 10 SEKONDAT E FUNDIT */
+
+#whiteClock.clock-danger,
+#blackClock.clock-danger {
+    border: 3px solid #ff2222 !important;
+    background: #222 !important;
+}
+/* HIJA E LËVIZJES SË FUNDIT */
+.last-move {
+    box-shadow:
+        inset 0 0 0 4px #d4af37 !important,
+        inset 0 0 12px rgba(212, 175, 55, 0.55) !important;
+}
+ 
+#beginnerTips {
+    width: min(950px, 94%);
+    margin: 35px auto;
+    padding: 25px;
+    box-sizing: border-box;
+
+    background: #222;
+    border: 2px solid #ffffff;
+    border-radius: 14px;
+
+    box-shadow: 0 0 15px rgba(255,255,255,0.15);
+
+    text-align: left;
+}
+
+#beginnerTips h2 {
+    margin: 0 0 25px;
+    text-align: center;
+
+    font-size: 28px;
+    color: #ffffff;
+}
+
+.tips-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tip-item {
+    background: #303030;
+
+    border: 1px solid #777;
+    border-radius: 10px;
+
+    padding: 14px;
+
+    font-size: 16px;
+    line-height: 1.5;
+
+    color: #eeeeee;
+}
+
+@media (max-width: 600px) {
+
+    #beginnerTips {
+        width: 94%;
+        padding: 16px;
+    }
+
+    #beginnerTips h2 {
+        font-size: 23px;
+    }
+
+    .tips-list {
+        grid-template-columns: 1fr;
+    }
+
+    .tip-item {
+        font-size: 15px;
+    }
+}
+
+/* FOOTER */
+
+#siteFooter {
+    width: 100%;
+    margin-top: 45px;
+    padding: 25px 10px;
+    box-sizing: border-box;
+
+    background: #111;
+    border-top: 2px solid #ffffff;
+
+    text-align: center;
+
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+#siteFooter span {
+    display: inline-block;
+    margin-top: 8px;
+
+    font-size: 15px;
+    font-weight: normal;
+    color: #dddddd;
+}
+
+@media (max-width: 600px) {
+
+    #siteFooter {
+        font-size: 16px;
+        padding: 22px 8px;
+    }
+
+    #siteFooter span {
+        font-size: 14px;
+    }
+}
+/* KUTIA E PROMOVIMIT */
+
+.promotion-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+justify-content: flex-start;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+}
+
+.promotion-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+padding: 22px;
+min-width: 340px;
+min-height: 130px;
+    background: white;
+    border: 3px solid #222;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.promotion-piece {
+    width: 104px;
+    height: 104px;
+    padding: 0;
+    border: 2px solid #777;
+    border-radius: 7px;
+    background: #eee;
+    font-family: "Times New Roman", serif;
+    font-size: 76px;
+    cursor: pointer;
+}
+
+ @media (min-width: 601px) {
+    .promotion-box {
+        gap: 12px;
+        padding: 22px;
+        min-width: 520px;
+        min-height: 160px;
+    }
+
+ .promotion-piece {
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0;
+    font-size: 32px !important;
+    flex: 0 0 42px !important;
+    box-sizing: border-box;
+}
+}     
+/* QENDRIMI I TITULLIT NE KOMPJUTER */
+@media (min-width: 700px) {
+.main-title {
+width: 100%;
+box-sizing: border-box;
+justify-content: flex-start;
+margin-left: 0;
+margin-right: 0;
+padding-left: 0px;
+}
+.main-title .title-flag:first-of-type {
+ margin-left: 0;
+ margin-right: 4px;
+ }
+
+    .main-title .title-flag:last-of-type {
+        margin-left: 4px;
+        margin-right: 0;
+    }
+.main-title strong {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+}
+ /* PROMOVIMI NE TELEFON */
+
+@media (max-width: 600px) {
+    .promotion-box {
+        gap: 8px;
+        padding: 10px;
+        min-width: 0;
+        min-height: 0;
+        width: max-content;
+        max-width: 100%;
+        transform: none;
+        box-sizing: border-box;
+    }
+
+    .promotion-piece {
+        width: 70px;
+        height: 70px;
+        padding: 0;
+        font-size: 52px;
+        flex: 0 0 70px;
+        box-sizing: border-box;
+    }
+}
+.promotion-piece:hover {
+    background: #ddd;
+    transform: scale(1.08);
+}
+#blackClock,
+#whiteClock {
+color: #66b3ff !important;
+}
+
+/* RREGULLIMI NË KOMPJUTER */
+@media (min-width: 601px) {
+
+   #clockBoardArea {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+ #gameArea {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0;
+    width: fit-content;
+    margin: 20px 0;
+}
+
+    #board {
+        flex-shrink: 0;
+    }
+#sidePanel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    width: 180px;
+    flex-shrink: 0;
+    margin-left: -25px;
+}
+
+#newGameButton {
+    order: 1;
+    margin: 0 auto;
+}
+
+#moveHistory {
+    order: 2;
+    width: 300px;
+    max-width: 300px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#blackClockArea,
+#whiteClockArea {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    margin: 8px auto;
+}
+
+#blackClockArea #blackFirstMove,
+#whiteClockArea #whiteFirstMove {
+    margin: 0;
+    flex-shrink: 0;
+}
+}
+ @media (max-width: 600px) {
+
+    #clockBoardArea {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #blackClockArea {
+        order: 2;
+    }
+
+    #gameArea {
+        order: 3;
+    }
+
+    #whiteClockArea {
+        order: 4;
+    }
+
+    #moveHistory {
+        order: 5;
+    }
+
+}
+#moveHistory {
+    border: 2px solid #ffffff !important;
+    border-radius: 10px !important;
+}
+#blackClock,
+#whiteClock {
+    width: 110px !important;
+    font-size: 22px !important;
+    padding: 6px 12px !important;
+    margin: 8px auto !important;
+}
+ 
+ /* KËTU FILLON PJESA E RE PËR TELEFON */
+
+@media (max-width: 600px) {
+
+   #clockBoardArea {
+    display: grid;
+    grid-template-columns: 70px 1fr 150px;
+    grid-template-areas:
+    "blackFirst blackClock newGame"
+    "board board board"
+    "whiteFirst whiteClock whiteClock"
+    "moveHistory moveHistory moveHistory";
+    align-items: end;
+    justify-items: center;
+    width: 100%;
+    gap: 8px;
+transform: translateX(0);
+   } 
+
+    #gameArea,
+    #sidePanel,
+    #blackClockArea,
+    #whiteClockArea {
+        display: contents;
+    }
+
+    #blackFirstMove {
+        grid-area: blackFirst;
+    }
+
+    #blackClock {
+        grid-area: blackClock;
+    }
+
+ #newGameButton {
+    grid-area: newGame;
+    width: 50px !important;
+    height: 50px !important;
+    padding: 0 !important;
+    font-size: 40px !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #28a745 !important;
+}
+#blackFirstMove,
+#blackClock,
+#newGameButton {
+    align-self: center !important;
+}
+#blackFirstMove,
+#blackClock {
+    transform: translateX(50px);
+}
+
+#newGameButton {
+    transform: translateY(00);
+}
+   
+ #board {
+        grid-area: board;
+    }
+
+    #whiteFirstMove {
+        grid-area: whiteFirst;
+    }
+
+    #whiteClock {
+        grid-area: whiteClock;
+    }
+#whiteFirstMove {
+    transform: translate(50px, -6px);
+}
+#whiteClock {
+    transform: translateX(-20px);
+}
+   #moveHistory {
+    grid-area: moveHistory;
+    width: 92vw !important;
+    max-width: 500px !important;
+    box-sizing: border-box;
+    margin: 0 auto !important;
+}
+#clockBoardArea.clock-flipped #blackFirstMove {
+    grid-area: whiteFirst;
+}
+
+#clockBoardArea.clock-flipped #blackClock {
+    grid-area: whiteClock;
+}
+
+#clockBoardArea.clock-flipped #whiteFirstMove {
+    grid-area: blackFirst;
+}
+
+#clockBoardArea.clock-flipped #whiteClock {
+    grid-area: blackClock;
+}
+#whiteClock.clock-active.clock-danger,
+#blackClock.clock-active.clock-danger {
+    border: 3px solid #ff2222 !important;
+    background: #222 !important;
+    color: #fff !important;
+    box-shadow:
+        0 0 8px #ff2222 !important,
+        0 0 18px #ff2222 !important,
+        0 0 30px rgba(255, 34, 34, 0.8) !important;
+}
+
+#blackFirstMove {
+    grid-area: blackFirst;
+}
+
+.light.selected,
+.dark.selected {
+    background: rgba(255, 215, 80, 0.55) !important;
+    box-shadow:
+        inset 0 0 0 3px rgba(255, 255, 255, 0.75),
+        inset 0 0 10px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* RREGULLIMI I ORËVE KUR TABELA RROTULLOHET */
+#clockBoardArea.clock-flipped #blackClock,
+#clockBoardArea.clock-flipped #whiteClock,
+#clockBoardArea.clock-flipped #blackFirstMove,
+#clockBoardArea.clock-flipped #whiteFirstMove {
+    transform: none !important;
+}
+} 
+/* RREGULLIMI STATIK NË KOMPJUTER */
+@media (min-width: 601px) {
+
+    #gameArea {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        gap: 25px !important;
+    }
+
+    #board {
+        flex: 0 0 520px !important;
+    }
+
+    #sidePanel {
+        display: flex !important;
+        flex: 0 0 300px !important;
+        width: 300px !important;
+        min-width: 300px !important;
+        max-width: 300px !important;
+        align-items: stretch !important;
+    }
+
+    #moveHistory {
+        display: block !important;
+        flex: 0 0 300px !important;
+        width: 300px !important;
+        min-width: 300px !important;
+        max-width: 300px !important;
+        height: 300px !important;
+        min-height: 300px !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+#blackClockArea,
+#whiteClockArea {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: max-content !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    flex-wrap: nowrap !important;
+    padding: 0 !important;
+}
+
+#blackClock,
+#whiteClock {
+    width: 110px !important;
+    min-width: 110px !important;
+    max-width: 110px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    margin: 0 !important;
+    padding: 3px 8px !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+}
+
+#blackFirstMove,
+#whiteFirstMove {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 45px !important;
+    min-width: 45px !important;
+    color: #ffffff !important;
+    font-size: 18px !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+}
+@media (min-width: 601px) {
+    #gameArea {
+       justify-content: flex-start !important; 
+    }
+
+    #board {
+        margin: 0 !important;
+        flex: 0 0 520px !important;
+    }
+}
+/* SHFAQ NUMRAT 25 NË KOMPJUTER */
+@media screen and (min-width: 601px) {
+#blackFirstMove,
+#whiteFirstMove {
+visibility: visible !important;
+display: block !important;
+opacity: 1 !important;    
+width: 45px !important;
+min-width: 45px !important;
+margin: 0 !important;
+padding: 0 !important;
+border: none !important;
+box-shadow: none !important;
+overflow: visible !important;
+text-align: center !important;
+  }
+}
+</style>
+</head>
+<body>
+<h1 class="main-title">
+  <img class="title-flag" src="https://flagcdn.com/w80/al.png" alt="Flamuri i Shqipërisë">
+  <strong>ÇUBRELI CHESS KOSOVA</strong>
+  <img class="title-flag" src="https://flagcdn.com/w80/xk.png" alt="Flamuri i Kosovës">
+</h1>
+<div id="subtitle">Dashamirët e shahut në Kosovë, Shqipëri e më gjerë</div>
+
+<div id="clockBoardArea">
+<div id="blackClockArea">
+<div id="blackFirstMove">25</div>
+<div id="blackClock">05:00</div>
+</div>
+<div id="gameResult"></div>
+
+<div id="gameArea">
+
+<div id="board"></div>
+
+<div id="sidePanel">
+
+<button id="newGameButton">🔄</button>
+
+<div id="moveHistory">
+<strong>LËVIZJET</strong>
+</div>
+
+</div>  
+
+</div> 
+
+<div id="whiteClockArea">
+<div id="whiteClock">05:00</div> 
+<div id="whiteFirstMove">25</div>
+</div>
+</div>
+<script>
+
+const board = document.getElementById("board");
+
+ const pieces = [
+
+    "♜","♞","♝","♛","♚","♝","♞","♜",
+
+    "♟","♟","♟","♟","♟","♟","♟","♟",
+
+    "","","","","","","","",
+
+    "","","","","","","","",
+
+    "","","","","","","","",
+
+    "","","","","","","","",
+
+    "♙","♙","♙","♙","♙","♙","♙","♙",
+
+    "♖","♘","♗","♕","♔","♗","♘","♖"
+
+];
+
+let selectedSquare = null;
+let whiteTurn = true;
+let lastMoveFrom = null;
+let lastMoveTo = null;
+let moveHistory = [];
+let lastDoubleStep = null;
+let whiteTime = 5 * 60;
+let blackTime = 5 * 60;
+
+let clockInterval = null;
+let clockStarted = false;
+let gameOver = false;
+
+let boardFlipped = false;
+let whiteKingMoved = false;
+let blackKingMoved = false;
+
+
+/* 25 SEKONDA PËR LËVIZJEN E PARË */
+
+let whiteFirstMoveTime = 25;
+let blackFirstMoveTime = 25;
+
+let whiteFirstMoveDone = false;
+let blackFirstMoveDone = false;
+
+let firstMoveInterval = null;
+
+
+/* FORMATI I ORËS */
+
+function formatTime(seconds) {
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secs =
+        seconds % 60;
+
+    return String(minutes).padStart(2, "0") +
+        ":" +
+        String(secs).padStart(2, "0");
+}
+
+/* ORËT NORMALE */
+
+function updateClocks() {
+
+    document.getElementById("whiteClock").textContent =
+        formatTime(whiteTime);
+
+    document.getElementById("blackClock").textContent =
+        formatTime(blackTime);
+
+
+   /* HIQ NGJYRAT E VJETRA */
+
+document.getElementById("blackClock")
+    .style.removeProperty("border");
+
+document.getElementById("blackClock")
+    .style.removeProperty("box-shadow");
+document.getElementById("whiteClock")
+    .style.removeProperty("border");
+
+document.getElementById("whiteClock")
+    .style.removeProperty("box-shadow");
+/* ORA AKTIVE */
+
+const clock = document.getElementById(
+    whiteTurn ? "whiteClock" : "blackClock"
+);
+
+clock.classList.add("clock-active");
+
+if (window.matchMedia("(min-width: 601px)").matches) {
+    clock.style.setProperty("border", "none", "important");
+    clock.style.setProperty("box-shadow", "none", "important");
+} else {
+    clock.style.setProperty(
+        "border",
+        "3px solid #72c98a",
+        "important"
+    );
+
+    clock.style.setProperty(
+        "box-shadow",
+        "0 0 6px #8acfa0, 0 0 12px #72c98a",
+        "important"
+    );
+}
+
+/* KUQ NË 10 SEKONDAT E FUNDIT */
+
+if (whiteTurn && whiteTime <= 10) {
+
+    const clock = document.getElementById("whiteClock");
+
+    clock.classList.add("clock-danger");
+
+    clock.style.setProperty(
+        "border",
+        "3px solid #ff2222",
+        "important"
+    );
+
+    clock.style.setProperty(
+        "box-shadow",
+        "0 0 8px #ff2222, 0 0 18px #ff2222, 0 0 30px rgba(255,34,34,0.8)",
+        "important"
+    );
+}
+
+if (!whiteTurn && blackTime <= 10) {
+
+    const clock = document.getElementById("blackClock");
+
+    clock.classList.add("clock-danger");
+
+    clock.style.setProperty(
+        "border",
+        "3px solid #ff2222",
+        "important"
+    );
+
+    clock.style.setProperty(
+        "box-shadow",
+        "0 0 8px #ff2222, 0 0 18px #ff2222, 0 0 30px rgba(255,34,34,0.8)",
+        "important"
+    );
+}
+
+}
+function updateFirstMoveClock() {
+
+    if (window.matchMedia("(min-width: 601px)").matches) {
+        document.getElementById("whiteFirstMove").style.display = "none";
+        document.getElementById("blackFirstMove").style.display = "none";
+        return;
+    }
+
+    document.getElementById("blackFirstMove").textContent =
+        blackFirstMoveTime;
+
+
+    const whiteClock =
+        document.getElementById("whiteFirstMove");
+
+    const blackClock =
+        document.getElementById("blackFirstMove");
+
+
+    /* HIQ ALARMIN */
+
+    whiteClock.classList.remove("first-move-danger");
+    blackClock.classList.remove("first-move-danger");
+
+    whiteClock.style.removeProperty("border");
+    whiteClock.style.removeProperty("box-shadow");
+
+    blackClock.style.removeProperty("border");
+    blackClock.style.removeProperty("box-shadow");
+
+
+    /* KUQ - 10 SEKONDAT E FUNDIT */
+
+    if (
+        !whiteFirstMoveDone &&
+        whiteFirstMoveTime <= 10
+    ) {
+
+        whiteClock.classList.add("first-move-danger");
+
+        whiteClock.style.setProperty(
+            "border",
+            "3px solid #ff2222",
+            "important"
+        );
+
+        whiteClock.style.setProperty(
+            "box-shadow",
+            "0 0 8px #ff2222, 0 0 18px #ff2222, 0 0 30px rgba(255,34,34,0.8)",
+            "important"
+        );
+    }
+
+
+    if (
+        !blackFirstMoveDone &&
+        blackFirstMoveTime <= 10
+    ) {
+
+        blackClock.classList.add("first-move-danger");
+
+        blackClock.style.setProperty(
+            "border",
+            "3px solid #ff2222",
+            "important"
+        );
+
+        blackClock.style.setProperty(
+            "box-shadow",
+            "0 0 8px #ff2222, 0 0 18px #ff2222, 0 0 30px rgba(255,34,34,0.8)",
+            "important"
+        );
+    }
+}
+
+
+
+/* FILLON NUMËRIMI 25 SEKONDA */
+
+function startFirstMoveClock() {
+
+    /* NDALO NUMËRIMIN NË KOMPJUTER */
+    if (window.matchMedia("(min-width: 601px)").matches) {
+        return;
+    }
+
+    if (firstMoveInterval !== null) {
+        return;
+    }
+
+    firstMoveInterval = setInterval(function () {
+
+        if (gameOver) {
+            clearInterval(firstMoveInterval);
+            firstMoveInterval = null;
+            return;
+        }
+
+        /* BARDHI */
+        if (whiteTurn && !whiteFirstMoveDone) {
+            whiteFirstMoveTime--;
+            updateFirstMoveClock();
+
+            if (whiteFirstMoveTime <= 0) {
+                clearInterval(firstMoveInterval);
+                firstMoveInterval = null;
+                gameOver = true;
+
+                document.getElementById("gameResult")
+                    .classList.add("checkmate-result");
+
+                document.getElementById("gameResult").textContent =
+                    "🏆 KOHA MBAROI! FITON LOJTARI I ZI!";
+
+                return;
+            }
+        }
+
+        /* ZI */
+        if (!whiteTurn && !blackFirstMoveDone) {
+            blackFirstMoveTime--;
+            updateFirstMoveClock();
+
+            if (blackFirstMoveTime <= 0) {
+                clearInterval(firstMoveInterval);
+                firstMoveInterval = null;
+                gameOver = true;
+
+                document.getElementById("gameResult")
+                    .classList.add("checkmate-result");
+
+                document.getElementById("gameResult").textContent =
+                    "🏆 KOHA MBAROI! FITON LOJTARI I BARDHË!";
+
+                return;
+            }
+        }
+
+    }, 1000);
+}
+
+
+/* ORA NORMALE */
+
+function startClock() {
+
+    if (clockStarted) {
+        return;
+    }
+
+
+    clockStarted = true;
+
+
+    clockInterval = setInterval(function () {
+
+        if (gameOver) {
+            return;
+        }
+
+
+        if (whiteTurn) {
+            whiteTime--;
+        } else {
+            blackTime--;
+        }
+
+console.log(
+    "ORA:",
+    whiteTurn ? "BARDHI" : "ZI",
+    "B:", whiteTime,
+    "Z:", blackTime
+);
+        updateClocks();
+
+
+        if (
+            whiteTime <= 0 ||
+            blackTime <= 0
+        ) {
+
+            clearInterval(clockInterval);
+            clockInterval = null;
+
+            gameOver = true;
+
+
+            document.getElementById("gameResult")
+                .classList.add("checkmate-result");
+
+            document.getElementById("gameResult")
+                .textContent =
+                whiteTime <= 0
+                    ? "🏆 KOHA MBAROI! FITON LOJTARI I ZI!"
+                    : "🏆 KOHA MBAROI! FITON LOJTARI I BARDHË!";
+        }
+
+
+    }, 1000);
+}
+
+
+updateFirstMoveClock();
+
+startFirstMoveClock();
+
+
+let whiteRookLeftMoved = false;
+let whiteRookRightMoved = false;
+
+let blackRookLeftMoved = false;
+let blackRookRightMoved = false;
+
+function renderMoveHistory() {
+
+    const box = document.getElementById("moveHistory");
+
+    box.innerHTML = "<strong>LËVIZJET</strong>";
+
+    /* RRESHTI I BARDHIT */
+    const whiteRow = document.createElement("div");
+
+    whiteRow.style.display = "flex";
+    whiteRow.style.flexWrap = "wrap";
+    whiteRow.style.width = "100%";
+    whiteRow.style.boxSizing = "border-box";
+    whiteRow.style.gap = "8px";
+    whiteRow.style.marginBottom = "4px";
+
+    /* RRESHTI I ZIUT */
+    const blackRow = document.createElement("div");
+
+    blackRow.style.display = "flex";
+    blackRow.style.flexWrap = "wrap";
+    blackRow.style.width = "100%";
+    blackRow.style.boxSizing = "border-box";
+    blackRow.style.gap = "8px";
+
+    /* LËVIZJET */
+    for (let i = 0; i < moveHistory.length; i++) {
+
+        const move = document.createElement("span");
+
+        move.textContent = moveHistory[i];
+
+        /* BARDHI */
+        if (i % 2 === 0) {
+            move.style.color = "#ffffff";
+            whiteRow.appendChild(move);
+        }
+
+        /* ZIU */
+        else {
+            move.style.color = "#d6a96c";
+            blackRow.appendChild(move);
+        }
+    }
+
+    box.appendChild(whiteRow);
+    box.appendChild(blackRow);
+}
+/* KRIJO TABELËN */
+
+for (let i = 0; i < 64; i++) {
+
+    const square = document.createElement("div");
+
+    square.classList.add("square");
+
+    if (
+        (Math.floor(i / 8) + i % 8) % 2 === 0
+    ) {
+        square.classList.add("light");
+    } else {
+        square.classList.add("dark");
+    }
+
+    const row = Math.floor(i / 8);
+    const col = i % 8;
+
+
+    /* KOORDINATAT */
+
+if (row === 7) {
+    square.dataset.file =
+        String.fromCharCode(97 + col);
+}
+
+if (col === 7) {
+    square.dataset.rank =
+        8 - row;
+}
+
+
+   /* FIGURAT */
+
+if (pieces[i] !== "") {
+
+    square.textContent = pieces[i];
+
+    if (
+        "♔♕♖♗♘♙".includes(pieces[i])
+    ) {
+        square.classList.add("white-piece");
+    } else {
+        square.classList.add("black-piece");
+    }
+
+    if (pieces[i] === "♔" || pieces[i] === "♚") {
+        square.classList.add("king-piece");
+    }
+} 
+ square.addEventListener(
+    "click",
+    function () {
+        handleSquareClick(this, i);
+    }
+);
+    board.appendChild(square);
+}
+
+
+/* MERR FIGURËN PA KOORDINATA */
+
+function getPiece(square) {
+    return square.textContent;
+}
+
+/* ZGJEDHJA E PROMOVIMIT */
+
+function showPromotionChoice(isWhite, targetSquare) {
+
+    return new Promise(function(resolve) {
+
+        const overlay = document.createElement("div");
+        overlay.className = "promotion-overlay";
+
+        const box = document.createElement("div");
+        box.style.cssText = "display:flex;gap:6px;padding:8px;min-width:0;width:max-content;box-sizing:border-box;";
+     box.className = "promotion-box";
+        box.style.position = "fixed";
+const pieces = isWhite
+            ? ["♕", "♖", "♗", "♘"]
+            : ["♛", "♜", "♝", "♞"];
+
+        pieces.forEach(function(piece) {
+
+         const button = document.createElement("button");
+         button.className = "promotion-piece";
+         button.style.cssText = "width:55px;height:55px;font-size:42px;flex:0 0 55px;";
+         button.textContent = piece;
+
+            button.addEventListener("click", function() {
+                overlay.remove();
+                resolve(piece);
+            });
+
+            box.appendChild(button);
+        });
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        const rect = targetSquare.getBoundingClientRect();
+        const board = document.getElementById("board");
+        const boardRect = board.getBoundingClientRect();
+        const boxRect = box.getBoundingClientRect();
+
+        let left = rect.left - 40;
+        let top = isWhite
+            ? rect.bottom + 6
+            : rect.top - boxRect.height - 6;
+
+        left = Math.max(
+            boardRect.left + 4,
+            Math.min(left, boardRect.right - boxRect.width - 4)
+        );
+
+        top = Math.max(
+            boardRect.top + 4,
+            Math.min(top, boardRect.bottom - boxRect.height - 4)
+        );
+
+        box.style.left = left + "px";
+        box.style.top = top + "px";
+    });
+}
+
+/* KLIKO KATRORIN */
+async function handleSquareClick(square, index) {
+    if (gameOver) {
+        return;
+    }
+    const squares =
+        Array.from(
+            document.querySelectorAll(".square")
+        );
+
+    const piece =
+        getPiece(square);
+
+
+    /* ZGJIDH FIGURËN */
+
+    if (selectedSquare === null) {
+
+        if (piece === "") {
+            return;
+        }
+
+        const isWhitePiece =
+            "♔♕♖♗♘♙".includes(piece);
+
+        if (isWhitePiece !== whiteTurn) {
+            return;
+        }
+
+        selectedSquare = index;
+
+        square.classList.add("selected");
+
+        return;
+    }
+
+
+    /* KLIKIM PËRSËRI */
+
+    if (selectedSquare === index) {
+
+        square.classList.remove("selected");
+
+        selectedSquare = null;
+
+        return;
+    }
+
+
+    const from = selectedSquare;
+    const to = index;
+
+    const fromRow = Math.floor(from / 8);
+    const fromCol = from % 8;
+
+    const toRow = Math.floor(to / 8);
+    const toCol = to % 8;
+
+    const movingSquare = squares[from];
+    const targetSquare = squares[to];
+
+    const movingPiece =
+        getPiece(movingSquare);
+
+    const target =
+        getPiece(targetSquare);
+
+    const isWhitePiece =
+        "♔♕♖♗♘♙".includes(movingPiece);
+
+    if (isWhitePiece !== whiteTurn) {
+        return;
+    }
+
+
+    const sameColor =
+        target !== "" &&
+        (
+            "♔♕♖♗♘♙".includes(target)
+            === isWhitePiece
+        );
+
+
+    let validMove = false;
+
+
+    /* PIONI */
+
+    if (
+        movingPiece === "♙" ||
+        movingPiece === "♟"
+    ) {
+
+        const direction =
+            movingPiece === "♙" ? -1 : 1;
+
+        const startRow =
+            movingPiece === "♙" ? 6 : 1;
+
+
+        if (
+            toCol === fromCol &&
+            toRow - fromRow === direction &&
+            target === ""
+        ) {
+            validMove = true;
+        }
+
+
+        if (
+            toCol === fromCol &&
+            fromRow === startRow &&
+            toRow - fromRow === direction * 2 &&
+            target === "" &&
+            getPiece(
+                squares[from + direction * 8]
+            ) === ""
+        ) {
+            validMove = true;
+        }
+
+
+        if (
+            Math.abs(toCol - fromCol) === 1 &&
+            toRow - fromRow === direction &&
+            target !== "" &&
+            !sameColor
+        ) {
+            validMove = true;
+        }
+
+
+        /* EN PASSANT */
+
+        if (
+            Math.abs(toCol - fromCol) === 1 &&
+            toRow - fromRow === direction &&
+            target === "" &&
+            lastDoubleStep !== null
+        ) {
+
+            const lastIndex =
+                lastDoubleStep.index;
+
+            const lastPiece =
+                lastDoubleStep.piece;
+
+            const expectedIndex =
+                fromRow * 8 +
+                fromCol +
+                (toCol - fromCol);
+
+            if (
+                lastIndex === expectedIndex &&
+                (
+                    lastPiece === "♙" ||
+                    lastPiece === "♟"
+                )
+            ) {
+
+                validMove = true;
+
+                squares[lastIndex].textContent = "";
+
+                squares[lastIndex]
+                    .classList
+                    .remove(
+                        "white-piece",
+                        "black-piece"
+                    );
+            }
+        }
+    }
+
+
+    /* KALI */
+
+    if (
+        movingPiece === "♘" ||
+        movingPiece === "♞"
+    ) {
+
+        const rowDiff =
+            Math.abs(toRow - fromRow);
+
+        const colDiff =
+            Math.abs(toCol - fromCol);
+
+        if (
+            (
+                rowDiff === 2 &&
+                colDiff === 1
+            ) ||
+            (
+                rowDiff === 1 &&
+                colDiff === 2
+            )
+        ) {
+
+            if (!sameColor) {
+                validMove = true;
+            }
+        }
+    }
+
+
+    /* TORRA */
+
+    if (
+        movingPiece === "♖" ||
+        movingPiece === "♜"
+    ) {
+
+        if (
+            fromRow === toRow ||
+            fromCol === toCol
+        ) {
+
+            let clear = true;
+
+            const rowStep =
+                toRow === fromRow
+                    ? 0
+                    : (toRow > fromRow ? 1 : -1);
+
+            const colStep =
+                toCol === fromCol
+                    ? 0
+                    : (toCol > fromCol ? 1 : -1);
+
+            let r = fromRow + rowStep;
+            let c = fromCol + colStep;
+
+            while (
+                r !== toRow ||
+                c !== toCol
+            ) {
+
+                if (
+                    getPiece(
+                        squares[r * 8 + c]
+                    ) !== ""
+                ) {
+                    clear = false;
+                    break;
+                }
+
+                r += rowStep;
+                c += colStep;
+            }
+
+            if (clear && !sameColor) {
+                validMove = true;
+            }
+        }
+    }
+
+
+    /* FILI */
+
+    if (
+        movingPiece === "♗" ||
+        movingPiece === "♝"
+    ) {
+
+        const rowDiff =
+            Math.abs(toRow - fromRow);
+
+        const colDiff =
+            Math.abs(toCol - fromCol);
+
+        if (rowDiff === colDiff) {
+
+            let clear = true;
+
+            const rowStep =
+                toRow > fromRow ? 1 : -1;
+
+            const colStep =
+                toCol > fromCol ? 1 : -1;
+
+            let r = fromRow + rowStep;
+            let c = fromCol + colStep;
+
+            while (
+                r !== toRow ||
+                c !== toCol
+            ) {
+
+                if (
+                    getPiece(
+                        squares[r * 8 + c]
+                    ) !== ""
+                ) {
+                    clear = false;
+                    break;
+                }
+
+                r += rowStep;
+                c += colStep;
+            }
+
+            if (clear && !sameColor) {
+                validMove = true;
+            }
+        }
+    }
+
+
+    /* MBRETËRESHA */
+
+    if (
+        movingPiece === "♕" ||
+        movingPiece === "♛"
+    ) {
+
+        const rowDiff =
+            Math.abs(toRow - fromRow);
+
+        const colDiff =
+            Math.abs(toCol - fromCol);
+
+        const straight =
+            fromRow === toRow ||
+            fromCol === toCol;
+
+        const diagonal =
+            rowDiff === colDiff;
+
+        if (straight || diagonal) {
+
+            let clear = true;
+
+            const rowStep =
+                toRow === fromRow
+                    ? 0
+                    : (toRow > fromRow ? 1 : -1);
+
+            const colStep =
+                toCol === fromCol
+                    ? 0
+                    : (toCol > fromCol ? 1 : -1);
+
+            let r = fromRow + rowStep;
+            let c = fromCol + colStep;
+
+            while (
+                r !== toRow ||
+                c !== toCol
+            ) {
+
+                if (
+                    getPiece(
+                        squares[r * 8 + c]
+                    ) !== ""
+                ) {
+                    clear = false;
+                    break;
+                }
+
+                r += rowStep;
+                c += colStep;
+            }
+
+            if (clear && !sameColor) {
+                validMove = true;
+            }
+        }
+    }
+
+
+    /* MBRETI */
+
+    if (
+        movingPiece === "♔" ||
+        movingPiece === "♚"
+    ) {
+
+        const rowDiff =
+            Math.abs(toRow - fromRow);
+
+        const colDiff =
+            Math.abs(toCol - fromCol);
+
+
+        if (
+            rowDiff <= 1 &&
+            colDiff <= 1 &&
+            rowDiff + colDiff > 0 &&
+            !sameColor
+        ) {
+            validMove = true;
+        }
+
+
+        /* ROKADA */
+
+        if (
+            rowDiff === 0 &&
+            colDiff === 2
+        ) {
+
+            if (
+                movingPiece === "♔" &&
+                fromRow === 7 &&
+                fromCol === 4
+            ) {
+
+                if (
+                    toCol === 6 &&
+                    !whiteKingMoved &&
+                    !whiteRookRightMoved &&
+                    canCastle(true, true)
+                ) {
+                    validMove = true;
+                }
+
+                if (
+                    toCol === 2 &&
+                    !whiteKingMoved &&
+                    !whiteRookLeftMoved &&
+                    canCastle(true, false)
+                ) {
+                    validMove = true;
+                }
+            }
+
+
+            if (
+                movingPiece === "♚" &&
+                fromRow === 0 &&
+                fromCol === 4
+            ) {
+
+                if (
+                    toCol === 6 &&
+                    !blackKingMoved &&
+                    !blackRookRightMoved &&
+                    canCastle(false, true)
+                ) {
+                    validMove = true;
+                }
+
+                if (
+                    toCol === 2 &&
+                    !blackKingMoved &&
+                    !blackRookLeftMoved &&
+                    canCastle(false, false)
+                ) {
+                    validMove = true;
+                }
+            }
+        }
+    }
+
+
+    /* MOS KAP MBRETIN */
+
+    if (
+        target === "♔" ||
+        target === "♚"
+    ) {
+        validMove = false;
+    }
+
+
+    if (!validMove) {
+        return;
+    }
+
+
+    /* RUAJ GJENDJEN */
+
+    const oldFromText =
+        squares[from].textContent;
+
+    const oldToText =
+        squares[to].textContent;
+
+    const oldFromClasses =
+        squares[from].className;
+
+    const oldToClasses =
+        squares[to].className;
+
+
+    /* ROKADA */
+
+    let isCastling = false;
+
+    if (
+        (
+            movingPiece === "♔" ||
+            movingPiece === "♚"
+        ) &&
+        Math.abs(toCol - fromCol) === 2
+    ) {
+
+        isCastling = true;
+
+
+        if (
+            movingPiece === "♔" &&
+            toCol === 6
+        ) {
+
+            squares[63].textContent = "";
+            squares[61].textContent = "♖";
+
+            squares[63]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[61]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[61]
+                .classList
+                .add("white-piece");
+        }
+
+
+        if (
+            movingPiece === "♔" &&
+            toCol === 2
+        ) {
+
+            squares[56].textContent = "";
+            squares[59].textContent = "♖";
+
+            squares[56]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[59]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[59]
+                .classList
+                .add("white-piece");
+        }
+
+
+        if (
+            movingPiece === "♚" &&
+            toCol === 6
+        ) {
+
+            squares[7].textContent = "";
+            squares[5].textContent = "♜";
+
+            squares[7]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[5]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[5]
+                .classList
+                .add("black-piece");
+        }
+
+
+        if (
+            movingPiece === "♚" &&
+            toCol === 2
+        ) {
+
+            squares[0].textContent = "";
+            squares[3].textContent = "♜";
+
+            squares[0]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[3]
+                .classList
+                .remove(
+                    "white-piece",
+                    "black-piece"
+                );
+
+            squares[3]
+                .classList
+                .add("black-piece");
+        }
+    }
+
+
+    /* SHËNO LËVIZJET */
+
+    if (movingPiece === "♔") {
+        whiteKingMoved = true;
+    }
+
+    if (movingPiece === "♚") {
+        blackKingMoved = true;
+    }
+
+    if (
+        movingPiece === "♖" &&
+        from === 56
+    ) {
+        whiteRookLeftMoved = true;
+    }
+
+    if (
+        movingPiece === "♖" &&
+        from === 63
+    ) {
+        whiteRookRightMoved = true;
+    }
+
+    if (
+        movingPiece === "♜" &&
+        from === 0
+    ) {
+        blackRookLeftMoved = true;
+    }
+
+    if (
+        movingPiece === "♜" &&
+        from === 7
+    ) {
+        blackRookRightMoved = true;
+    }
+
+/* LËVIZ FIGURËN */
+
+/* HIQ SHENJËN E LËVIZJES SË MËPARSHME */
+squares.forEach(function (sq) {
+    sq.classList.remove("last-move");
+});
+
+squares[from].textContent = "";
+
+squares[from]
+    .classList
+    .remove(
+        "white-piece",
+        "black-piece",
+        "selected"
+    );
+
+squares[to].textContent =
+    movingPiece;
+
+squares[to]
+    .classList
+    .remove(
+        "white-piece",
+        "black-piece"
+    );
+
+squares[to]
+    .classList
+    .add(
+        isWhitePiece
+            ? "white-piece"
+            : "black-piece"
+    );
+
+/* SHËNO KUTITË E LËVIZJES SË FUNDIT */
+squares[from].classList.add("last-move");
+squares[to].classList.add("last-move");
+
+    /* DY HAPA I PIONIT */
+
+    if (
+        (
+            movingPiece === "♙" ||
+            movingPiece === "♟"
+        ) &&
+        Math.abs(toRow - fromRow) === 2
+    ) {
+
+        lastDoubleStep = {
+            index: to,
+            piece: movingPiece
+        };
+
+    } else {
+
+        lastDoubleStep = null;
+    }
+
+
+    /* KONTROLLO MBRETIN */
+
+    const ownKing =
+        isWhitePiece ? "♔" : "♚";
+
+    const ownKingIndex =
+        squares.findIndex(
+            s =>
+                getPiece(s) === ownKing
+        );
+
+
+    if (
+        ownKingIndex !== -1 &&
+        isKingInCheck(
+            squares[ownKingIndex]
+        )
+    ) {
+
+        squares[from].textContent =
+            oldFromText;
+
+        squares[to].textContent =
+            oldToText;
+
+        squares[from].className =
+            oldFromClasses;
+
+        squares[to].className =
+            oldToClasses;
+
+
+        /* KTHE TORREN */
+
+        if (isCastling) {
+
+            if (
+                movingPiece === "♔" &&
+                toCol === 6
+            ) {
+
+                squares[61].textContent = "";
+                squares[63].textContent = "♖";
+
+                squares[61]
+                    .classList
+                    .remove("white-piece");
+
+                squares[63]
+                    .classList
+                    .add("white-piece");
+            }
+
+            if (
+                movingPiece === "♔" &&
+                toCol === 2
+            ) {
+
+                squares[59].textContent = "";
+                squares[56].textContent = "♖";
+
+                squares[59]
+                    .classList
+                    .remove("white-piece");
+
+                squares[56]
+                    .classList
+                    .add("white-piece");
+            }
+
+            if (
+                movingPiece === "♚" &&
+                toCol === 6
+            ) {
+
+                squares[5].textContent = "";
+                squares[7].textContent = "♜";
+
+                squares[5]
+                    .classList
+                    .remove("black-piece");
+
+                squares[7]
+                    .classList
+                    .add("black-piece");
+            }
+
+            if (
+                movingPiece === "♚" &&
+                toCol === 2
+            ) {
+
+                squares[3].textContent = "";
+                squares[0].textContent = "♜";
+
+                squares[3]
+                    .classList
+                    .remove("black-piece");
+
+                squares[0]
+                    .classList
+                    .add("black-piece");
+            }
+        }
+
+        return;
+    }
+
+/* SHËNO LËVIZJEN E FUNDIT */
+
+if (lastMoveFrom !== null) {
+    squares[lastMoveFrom].classList.remove("selected");
+}
+
+if (lastMoveTo !== null) {
+    squares[lastMoveTo].classList.remove("selected");
+}
+
+lastMoveFrom = from;
+lastMoveTo = to;
+
+squares[lastMoveFrom].classList.add("selected");
+squares[lastMoveTo].classList.add("selected");
+
+selectedSquare = null;
+
+
+/* PROMOVIMI I BARDHË */
+
+if (
+    movingPiece === "♙" &&
+    toRow === 0
+) {
+
+const newPiece =
+    await showPromotionChoice(true, squares[to]);
+
+    squares[to].textContent =
+        newPiece;
+
+    squares[to]
+        .classList
+        .remove(
+            "white-piece",
+            "black-piece"
+        );
+
+    squares[to]
+        .classList
+        .add("white-piece");
+}
+
+
+/* PROMOVIMI I ZI */
+
+if (
+    movingPiece === "♟" &&
+    toRow === 7
+) {
+
+const newPiece =
+    await showPromotionChoice(false, squares[to]);
+
+    squares[to].textContent =
+        newPiece;
+
+    squares[to]
+        .classList
+        .remove(
+            "white-piece",
+            "black-piece"
+        );
+
+    squares[to]
+        .classList
+        .add("black-piece");
+}
+
+  /* HISTORIA E LËVIZJEVE */
+
+    const files = "abcdefgh";
+
+    const moveText =
+        files[fromCol] + (8 - fromRow) +
+        "-" +
+        files[toCol] + (8 - toRow);
+
+moveHistory.push(moveText);
+
+renderMoveHistory();
+
+playMoveSound();
+
+ /* PËRFUNDO LËVIZJEN E PARË TË BARDHIT */
+
+if (whiteTurn && !whiteFirstMoveDone) {
+
+    whiteFirstMoveDone = true;
+
+    updateFirstMoveClock();
+}
+
+
+/* PËRFUNDO LËVIZJEN E PARË TË ZIUT */
+
+if (!whiteTurn && !blackFirstMoveDone) {
+
+    blackFirstMoveDone = true;
+
+    updateFirstMoveClock();
+}
+
+
+/* NDËRRO RADHËN */
+
+whiteTurn = !whiteTurn;
+console.log("RADHA:", whiteTurn ? "BARDHI" : "ZI");
+document.getElementById("whiteClock")
+    .classList.toggle("clock-active", whiteTurn);
+
+document.getElementById("blackClock")
+    .classList.toggle("clock-active", !whiteTurn);  
+
+                      
+/* TË DY KANË BËRË LËVIZJEN E PARË */
+
+if (
+    whiteFirstMoveDone &&
+    blackFirstMoveDone
+) {
+
+    clearInterval(firstMoveInterval);
+    firstMoveInterval = null;
+    startClock();
+}
+
+/* KONTROLLO REMIN - VETËM DY MBRETËR */
+
+if (isKingVsKing()) {
+
+    gameOver = true;
+
+    clearInterval(clockInterval);
+    clearInterval(firstMoveInterval);
+
+    document.getElementById("gameResult")
+        .classList.add("checkmate-result");
+
+    document.getElementById("gameResult").textContent =
+        "🤝 REMI! MBETËN VETËM DY MBRETËR!";
+
+    selectedSquare = null;
+
+    return;
+}
+/* PASTRO SHAHUN E VJETËR */
+
+document.querySelectorAll(".in-check").forEach(function (square) {
+    square.classList.remove("in-check");
+});
+
+/* KONTROLLO SHAHUN */
+
+    const enemyKing =
+        whiteTurn ? "♔" : "♚";
+
+    const enemyKingIndex =
+        squares.findIndex(
+            s =>
+                getPiece(s) === enemyKing
+        );
+
+
+/* PASTRO SHAHUN E VJETËR */
+
+document.querySelectorAll(".in-check").forEach(function (square) {
+    square.classList.remove("in-check");
+});
+
+
+if (
+    enemyKingIndex !== -1 &&
+    isKingInCheck(
+        squares[enemyKingIndex]
+    )
+) {
+
+    squares[enemyKingIndex]
+        .classList
+        .add("in-check");
+
+
+        /* SHAH-MAT */
+
+        if (isCheckmate(whiteTurn)) {
+gameOver = true;
+   document.querySelectorAll(".in-check").forEach(function (square) {
+    square.classList.remove("in-check");
+    square.classList.add("checkmate");
+});
+         clearInterval(clockInterval);
+clockInterval = null;        
+    setTimeout(
+    function () {
+
+    if (whiteTurn) {
+
+    document.getElementById("gameResult").classList.add("checkmate-result"); 
+     document.getElementById("gameResult").textContent =
+    "🏆 SHAH-MAT! FITON LOJTARI I ZI!";
+                    } else {
+
+         document.getElementById("gameResult").classList.add("checkmate-result");       
+     document.getElementById("gameResult").textContent =
+    "🏆 SHAH-MAT! FITON LOJTARI I BARDHË!";
+                    }
+
+                },
+                800
+            );
+
+        } else {
+
+     
+        }
+
+
+    } else if (
+    
+    !hasAnyLegalMove(whiteTurn)
+) {
+    gameOver = true;
+
+    clearInterval(clockInterval);
+    clockInterval = null;
+
+    document.getElementById("gameResult")
+        .classList.add("checkmate-result");
+
+    document.getElementById("gameResult").textContent =
+        "🤝 PAT! BARAZIM!";
+}
+}
+
+function playMoveSound() {
+
+    const audioContext =
+        new (window.AudioContext || window.webkitAudioContext)();
+
+    const now =
+        audioContext.currentTime;
+
+    const bufferSize =
+        audioContext.sampleRate * 0.035;
+
+    const buffer =
+        audioContext.createBuffer(
+            1,
+            bufferSize,
+            audioContext.sampleRate
+        );
+
+    const data =
+        buffer.getChannelData(0);
+
+    for (let i = 0; i < bufferSize; i++) {
+
+        data[i] =
+            (Math.random() * 2 - 1) *
+            Math.pow(1 - i / bufferSize, 8);
+    }
+
+    const source =
+        audioContext.createBufferSource();
+
+    const filter =
+        audioContext.createBiquadFilter();
+
+    const gain =
+        audioContext.createGain();
+
+    filter.type = "lowpass";
+    filter.frequency.value = 1800;
+
+    gain.gain.setValueAtTime(
+        0.90,
+        now
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        now + 0.50
+    );
+
+    source.buffer = buffer;
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioContext.destination);
+
+    source.start(now);
+}
+/* A KA LËVIZJE TË LEJUAR? */
+
+function hasAnyLegalMove(isWhite) {
+
+    const squares =
+        Array.from(
+            document.querySelectorAll(".square")
+        );
+
+    const ownPieces =
+        isWhite
+            ? ["♔","♕","♖","♗","♘","♙"]
+            : ["♚","♛","♜","♝","♞","♟"];
+
+
+    for (let from = 0; from < 64; from++) {
+
+        const piece =
+            getPiece(squares[from]);
+
+        if (!ownPieces.includes(piece)) {
+            continue;
+        }
+
+
+        for (let to = 0; to < 64; to++) {
+
+            if (from === to) {
+                continue;
+            }
+
+            const target =
+                getPiece(squares[to]);
+
+            if (
+                target === "♔" ||
+                target === "♚"
+            ) {
+                continue;
+            }
+
+
+            const fromRow =
+                Math.floor(from / 8);
+
+            const fromCol =
+                from % 8;
+
+            const toRow =
+                Math.floor(to / 8);
+
+            const toCol =
+                to % 8;
+
+
+            const sameColor =
+                target !== "" &&
+                (
+                    "♔♕♖♗♘♙"
+                    .includes(target)
+                    === isWhite
+                );
+
+            if (sameColor) {
+                continue;
+            }
+
+
+            let valid = false;
+
+
+            /* PION */
+
+            if (
+                piece === "♙" ||
+                piece === "♟"
+            ) {
+
+                const direction =
+                    piece === "♙" ? -1 : 1;
+
+                const startRow =
+                    piece === "♙" ? 6 : 1;
+
+
+                if (
+                    toCol === fromCol &&
+                    toRow - fromRow === direction &&
+                    target === ""
+                ) {
+                    valid = true;
+                }
+
+
+                if (
+                    toCol === fromCol &&
+                    fromRow === startRow &&
+                    toRow - fromRow === direction * 2 &&
+                    target === "" &&
+                    getPiece(
+                        squares[
+                            from + direction * 8
+                        ]
+                    ) === ""
+                ) {
+                    valid = true;
+                }
+
+
+                if (
+                    Math.abs(
+                        toCol - fromCol
+                    ) === 1 &&
+                    toRow - fromRow === direction &&
+                    target !== ""
+                ) {
+                    valid = true;
+                }
+            }
+
+
+            /* KALI */
+
+            if (
+                piece === "♘" ||
+                piece === "♞"
+            ) {
+
+                const rd =
+                    Math.abs(
+                        toRow - fromRow
+                    );
+
+                const cd =
+                    Math.abs(
+                        toCol - fromCol
+                    );
+
+                if (
+                    (
+                        rd === 2 &&
+                        cd === 1
+                    ) ||
+                    (
+                        rd === 1 &&
+                        cd === 2
+                    )
+                ) {
+                    valid = true;
+                }
+            }
+
+
+            /* TORRA */
+
+            if (
+                piece === "♖" ||
+                piece === "♜"
+            ) {
+
+                if (
+                    fromRow === toRow ||
+                    fromCol === toCol
+                ) {
+
+                    let clear = true;
+
+                    const rowStep =
+                        toRow === fromRow
+                            ? 0
+                            : (
+                                toRow > fromRow
+                                    ? 1
+                                    : -1
+                            );
+
+                    const colStep =
+                        toCol === fromCol
+                            ? 0
+                            : (
+                                toCol > fromCol
+                                    ? 1
+                                    : -1
+                            );
+
+                    let r =
+                        fromRow + rowStep;
+
+                    let c =
+                        fromCol + colStep;
+
+                    while (
+                        r !== toRow ||
+                        c !== toCol
+                    ) {
+
+                        if (
+                            getPiece(
+                                squares[r * 8 + c]
+                            ) !== ""
+                        ) {
+
+                            clear = false;
+                            break;
+                        }
+
+                        r += rowStep;
+                        c += colStep;
+                    }
+
+                    if (clear) {
+                        valid = true;
+                    }
+                }
+            }
+
+
+            /* FILI */
+
+            if (
+                piece === "♗" ||
+                piece === "♝"
+            ) {
+
+                const rd =
+                    Math.abs(
+                        toRow - fromRow
+                    );
+
+                const cd =
+                    Math.abs(
+                        toCol - fromCol
+                    );
+
+                if (rd === cd) {
+
+                    let clear = true;
+
+                    const rowStep =
+                        toRow > fromRow
+                            ? 1
+                            : -1;
+
+                    const colStep =
+                        toCol > fromCol
+                            ? 1
+                            : -1;
+
+                    let r =
+                        fromRow + rowStep;
+
+                    let c =
+                        fromCol + colStep;
+
+                    while (
+                        r !== toRow ||
+                        c !== toCol
+                    ) {
+
+                        if (
+                            getPiece(
+                                squares[r * 8 + c]
+                            ) !== ""
+                        ) {
+
+                            clear = false;
+                            break;
+                        }
+
+                        r += rowStep;
+                        c += colStep;
+                    }
+
+                    if (clear) {
+                        valid = true;
+                    }
+                }
+            }
+
+
+            /* MBRETËRESHA */
+
+            if (
+                piece === "♕" ||
+                piece === "♛"
+            ) {
+
+                const rd =
+                    Math.abs(
+                        toRow - fromRow
+                    );
+
+                const cd =
+                    Math.abs(
+                        toCol - fromCol
+                    );
+
+                const straight =
+                    fromRow === toRow ||
+                    fromCol === toCol;
+
+                const diagonal =
+                    rd === cd;
+
+                if (straight || diagonal) {
+
+                    let clear = true;
+
+                    const rowStep =
+                        toRow === fromRow
+                            ? 0
+                            : (
+                                toRow > fromRow
+                                    ? 1
+                                    : -1
+                            );
+
+                    const colStep =
+                        toCol === fromCol
+                            ? 0
+                            : (
+                                toCol > fromCol
+                                    ? 1
+                                    : -1
+                            );
+
+                    let r =
+                        fromRow + rowStep;
+
+                    let c =
+                        fromCol + colStep;
+
+                    while (
+                        r !== toRow ||
+                        c !== toCol
+                    ) {
+
+                        if (
+                            getPiece(
+                                squares[r * 8 + c]
+                            ) !== ""
+                        ) {
+
+                            clear = false;
+                            break;
+                        }
+
+                        r += rowStep;
+                        c += colStep;
+                    }
+
+                    if (clear) {
+                        valid = true;
+                    }
+                }
+            }
+
+
+            /* MBRETI */
+
+            if (
+                piece === "♔" ||
+                piece === "♚"
+            ) {
+
+                const rd =
+                    Math.abs(
+                        toRow - fromRow
+                    );
+
+                const cd =
+                    Math.abs(
+                        toCol - fromCol
+                    );
+
+                if (
+                    rd <= 1 &&
+                    cd <= 1 &&
+                    rd + cd > 0
+                ) {
+                    valid = true;
+                }
+            }
+
+
+            if (!valid) {
+                continue;
+            }
+
+
+            /* PROVO LËVIZJEN */
+
+            const oldFrom =
+                squares[from].textContent;
+
+            const oldTo =
+                squares[to].textContent;
+
+            squares[from].textContent = "";
+            squares[to].textContent = piece;
+
+
+            const kingPiece =
+                isWhite ? "♔" : "♚";
+
+            const kingIndex =
+                squares.findIndex(
+                    s =>
+                        getPiece(s) === kingPiece
+                );
+
+
+            const leavesKingInCheck =
+                kingIndex !== -1 &&
+                isKingInCheck(
+                    squares[kingIndex]
+                );
+
+
+            squares[from].textContent =
+                oldFrom;
+
+            squares[to].textContent =
+                oldTo;
+
+
+            if (!leavesKingInCheck) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+/* SHAH-MAT */
+
+function isCheckmate(isWhite) {
+
+    const squares =
+        Array.from(
+            document.querySelectorAll(".square")
+        );
+
+    const kingPiece =
+        isWhite ? "♔" : "♚";
+
+    const kingSquare =
+        squares.find(
+            s =>
+                getPiece(s) === kingPiece
+        );
+
+    if (!kingSquare) {
+        return false;
+    }
+
+    if (!isKingInCheck(kingSquare)) {
+        return false;
+    }
+
+    return !hasAnyLegalMove(isWhite);
+}
+/* REMI - VETËM DY MBRETËR */
+
+function isKingVsKing() {
+
+    const squares =
+        Array.from(
+            document.querySelectorAll(".square")
+        );
+
+    let piecesOnBoard = 0;
+
+    for (const square of squares) {
+
+        const piece = getPiece(square);
+
+        if (piece !== "") {
+            piecesOnBoard++;
+        }
+
+        if (
+            piece !== "" &&
+            piece !== "♔" &&
+            piece !== "♚"
+        ) {
+            return false;
+        }
+    }
+
+    return piecesOnBoard === 2;
+}
+
+/* ROKADA */
+
+function canCastle(
+    isWhite,
+    shortCastle
+) {
+
+    const squares =
+        Array.from(
+            document.querySelectorAll(".square")
+        );
+
+
+    const kingIndex =
+        isWhite ? 60 : 4;
+
+
+    const rookIndex =
+        isWhite
+            ? (
+                shortCastle
+                    ? 63
+                    : 56
+            )
+            : (
+                shortCastle
+                    ? 7
+                    : 0
+            );
+
+
+    const emptySquares =
+        isWhite
+            ? (
+                shortCastle
+                    ? [61, 62]
+                    : [57, 58, 59]
+            )
+            : (
+                shortCastle
+                    ? [5, 6]
+                    : [1, 2, 3]
+            );
+
+
+    const kingPiece =
+        isWhite ? "♔" : "♚";
+
+    const rookPiece =
+        isWhite ? "♖" : "♜";
+
+
+    if (
+        getPiece(
+            squares[kingIndex]
+        ) !== kingPiece
+    ) {
+        return false;
+    }
+
+
+    if (
+        getPiece(
+            squares[rookIndex]
+        ) !== rookPiece
+    ) {
+        return false;
+    }
+
+
+    for (
+        const index of emptySquares
+    ) {
+
+        if (
+            getPiece(
+                squares[index]
+            ) !== ""
+        ) {
+            return false;
+        }
+    }
+
+
+    if (
+        isKingInCheck(
+            squares[kingIndex]
+        )
+    ) {
+        return false;
+    }
+
+
+    const middleIndex =
+        shortCastle
+            ? (
+                isWhite ? 61 : 5
+            )
+            : (
+                isWhite ? 59 : 3
+            );
+
+
+    const destinationIndex =
+        shortCastle
+            ? (
+                isWhite ? 62 : 6
+            )
+            : (
+                isWhite ? 58 : 2
+            );
+
+
+    /* KATRORI I MESËM */
+
+    const oldKingText =
+        squares[kingIndex].textContent;
+
+    squares[kingIndex].textContent = "";
+
+    squares[middleIndex].textContent =
+        kingPiece;
+
+
+    const middleInCheck =
+        isKingInCheck(
+            squares[middleIndex]
+        );
+
+
+    squares[middleIndex].textContent = "";
+
+    squares[kingIndex].textContent =
+        oldKingText;
+
+
+    if (middleInCheck) {
+        return false;
+    }
+
+
+    /* KATRORI I FUNDIT */
+
+    squares[kingIndex].textContent = "";
+
+    squares[destinationIndex].textContent =
+        kingPiece;
+
+
+    const destinationInCheck =
+        isKingInCheck(
+            squares[destinationIndex]
+        );
+
+
+    squares[destinationIndex].textContent = "";
+
+    squares[kingIndex].textContent =
+        oldKingText;
+
+
+    if (destinationInCheck) {
+        return false;
+    }
+
+
+    return true;
+}
+
+
+/* KONTROLLO SHAHUN */
+
+function isKingInCheck(kingSquare) {
+
+    const squares =
+        Array.from(
+            document.querySelectorAll(".square")
+        );
+
+
+    const kingIndex =
+        squares.indexOf(kingSquare);
+
+    if (kingIndex === -1) {
+        return false;
+    }
+
+
+    const kingPiece =
+        getPiece(kingSquare);
+
+    const isWhiteKing =
+        kingPiece === "♔";
+
+
+    const enemyPieces =
+        isWhiteKing
+            ? ["♟","♜","♞","♝","♛"]
+            : ["♙","♖","♘","♗","♕"];
+
+
+    const kingRow =
+        Math.floor(kingIndex / 8);
+
+    const kingCol =
+        kingIndex % 8;
+/* MBRETI KUNDËRSHTAR */
+
+const enemyKing =
+    isWhiteKing ? "♚" : "♔";
+
+for (let i = 0; i < 64; i++) {
+
+    if (getPiece(squares[i]) !== enemyKing) {
+        continue;
+    }
+
+    const enemyRow =
+        Math.floor(i / 8);
+
+    const enemyCol =
+        i % 8;
+
+    if (
+        Math.abs(enemyRow - kingRow) <= 1 &&
+        Math.abs(enemyCol - kingCol) <= 1 &&
+        (
+            Math.abs(enemyRow - kingRow) +
+            Math.abs(enemyCol - kingCol)
+        ) > 0
+    ) {
+        return true;
+    }
+}
+
+    for (
+        let i = 0;
+        i < 64;
+        i++
+    ) {
+
+        const piece =
+            getPiece(squares[i]);
+
+
+        if (!enemyPieces.includes(piece)) {
+            continue;
+        }
+
+
+        const row =
+            Math.floor(i / 8);
+
+        const col =
+            i % 8;
+
+
+        /* PIONI */
+
+        if (
+            piece === "♙" ||
+            piece === "♟"
+        ) {
+
+            const direction =
+                piece === "♙" ? -1 : 1;
+
+            if (
+                row + direction === kingRow &&
+                Math.abs(
+                    col - kingCol
+                ) === 1
+            ) {
+                return true;
+            }
+        }
+
+
+        /* KALI */
+
+        if (
+            piece === "♘" ||
+            piece === "♞"
+        ) {
+
+            const rd =
+                Math.abs(
+                    row - kingRow
+                );
+
+            const cd =
+                Math.abs(
+                    col - kingCol
+                );
+
+            if (
+                (
+                    rd === 2 &&
+                    cd === 1
+                ) ||
+                (
+                    rd === 1 &&
+                    cd === 2
+                )
+            ) {
+                return true;
+            }
+        }
+
+
+        /* TORRA / MBRETËRESHA */
+
+        if (
+            piece === "♖" ||
+            piece === "♜" ||
+            piece === "♕" ||
+            piece === "♛"
+        ) {
+
+            const straight =
+                row === kingRow ||
+                col === kingCol;
+
+            if (straight) {
+
+                const rowStep =
+                    row === kingRow
+                        ? 0
+                        : (
+                            kingRow > row
+                                ? 1
+                                : -1
+                        );
+
+                const colStep =
+                    col === kingCol
+                        ? 0
+                        : (
+                            kingCol > col
+                                ? 1
+                                : -1
+                        );
+
+                let r =
+                    row + rowStep;
+
+                let c =
+                    col + colStep;
+
+                let clear = true;
+
+                while (
+                    r !== kingRow ||
+                    c !== kingCol
+                ) {
+
+                    if (
+                        getPiece(
+                            squares[r * 8 + c]
+                        ) !== ""
+                    ) {
+
+                        clear = false;
+                        break;
+                    }
+
+                    r += rowStep;
+                    c += colStep;
+                }
+
+                if (clear) {
+                    return true;
+                }
+            }
+        }
+
+
+        /* FILI / MBRETËRESHA */
+
+        if (
+            piece === "♗" ||
+            piece === "♝" ||
+            piece === "♕" ||
+            piece === "♛"
+        ) {
+
+            const rd =
+                Math.abs(
+                    row - kingRow
+                );
+
+            const cd =
+                Math.abs(
+                    col - kingCol
+                );
+
+            if (rd === cd) {
+
+                const rowStep =
+                    kingRow > row
+                        ? 1
+                        : -1;
+
+                const colStep =
+                    kingCol > col
+                        ? 1
+                        : -1;
+
+                let r =
+                    row + rowStep;
+
+                let c =
+                    col + colStep;
+
+                let clear = true;
+
+                while (
+                    r !== kingRow ||
+                    c !== kingCol
+                ) {
+
+                    if (
+                        getPiece(
+                            squares[r * 8 + c]
+                        ) !== ""
+                    ) {
+
+                        clear = false;
+                        break;
+                    }
+
+                    r += rowStep;
+                    c += colStep;
+                }
+
+                if (clear) {
+                    return true;
+                }
+            }
+        }
+    }
+
+
+    return false;
+}
+
+
+/* LOJA E RE */
+
+document.getElementById(
+    "newGameButton"
+).addEventListener(
+    "click",
+    function () {
+boardFlipped = !boardFlipped;
+
+document.getElementById("board").classList.toggle(
+    "board-flipped",
+    boardFlipped
+);
+  document.getElementById("clockBoardArea").classList.toggle(
+    "clock-flipped",
+    boardFlipped
+);     
+
+/* NDRYSHO KOORDINATAT SIPAS ORIENTIMIT */
+
+const coordinateSquares =
+    Array.from(
+        document.querySelectorAll(".square")
+    );
+
+coordinateSquares.forEach(function (square, index) {
+
+    const row = Math.floor(index / 8);
+    const col = index % 8;
+
+    delete square.dataset.file;
+    delete square.dataset.rank;
+
+    if (!boardFlipped) {
+
+        /* BARDHI POSHTË */
+
+        if (row === 7) {
+            square.dataset.file =
+                String.fromCharCode(97 + col);
+        }
+
+        if (col === 7) {
+            square.dataset.rank =
+                8- row;
+        }
+
+    } else {
+
+        /* ZI POSHTË */
+
+        if (row === 0) {
+            square.dataset.file =
+                String.fromCharCode(97 + col);
+        }
+
+        if (col === 0) {
+            square.dataset.rank =
+                8- row;
+        }
+    }
+});
+        const squares =
+            Array.from(
+                document.querySelectorAll(".square")
+            );
+
+
+        for (
+            let i = 0;
+            i < 64;
+            i++
+        ) {
+
+            squares[i].textContent =
+                pieces[i];
+
+
+            squares[i]
+           .classList
+.remove(
+    "white-piece",
+    "black-piece",
+    "selected",
+    "in-check",
+    "checkmate"
+);
+
+
+            if (
+                "♔♕♖♗♘♙"
+                .includes(pieces[i])
+            ) {
+
+                squares[i]
+                    .classList
+                    .add("white-piece");
+
+            } else if (
+                pieces[i] !== ""
+            ) {
+
+                squares[i]
+                    .classList
+                    .add("black-piece");
+            }
+        }
+ squares.forEach(function (square) {
+    square.classList.remove("last-move", "selected");
+});    
+selectedSquare = null;
+lastMoveFrom = null;
+lastMoveTo = null;
+whiteTurn = true;
+gameOver = false;
+whiteTime = 5 * 60;
+blackTime = 5 * 60;
+clockStarted = false;
+clearInterval(clockInterval);
+clockInterval = null;
+updateClocks();
+/* RESET 25 SEKONDAT E LËVIZJES SË PARË */
+
+clearInterval(firstMoveInterval);
+firstMoveInterval = null;
+
+whiteFirstMoveTime = 25;
+blackFirstMoveTime = 25;
+
+whiteFirstMoveDone = false;
+blackFirstMoveDone = false;
+
+updateFirstMoveClock();
+
+/* RINIS 25 SEKONDAT */
+startFirstMoveClock();
+
+  document.getElementById("gameResult").textContent = "";      
+        lastDoubleStep = null;
+moveHistory = [];
+renderMoveHistory();
+        whiteKingMoved = false;
+        blackKingMoved = false;
+
+        whiteRookLeftMoved = false;
+        whiteRookRightMoved = false;
+
+        blackRookLeftMoved = false;
+        blackRookRightMoved = false;
+    }
+);
+document.getElementById("rulesToggle").addEventListener("click", function () {
+const rulesGrid =
+    document.querySelector("#chessRules .rules-grid");
+
+rulesGrid.classList.toggle("rules-open");
+
+});
+
+</script>
+
+ <!-- ============================= -->
+<!-- RREGULLAT E SHAHUT             -->
+<!-- ============================= -->
+
+<section id="chessRules">
+
+<h2 id="rulesToggle"><span class="rules-button">S</span> ⚔️ RREGULLAT E SHAHUT</h2>
+
+    <div class="rules-grid">
+
+        <div class="rule-card">
+            <h3>1. ♟️ Qëllimi i lojës</h3>
+            <p>
+                Shahu luhet nga dy lojtarë: i Bardhi dhe i Ziu.
+                Qëllimi është të vendosësh mbretin e kundërshtarit
+                në shah-mat.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>2. ♟️ Tabela e shahut</h3>
+            <p>
+                Tabela ka 64 katrorë, 8 rreshta dhe 8 kolona.
+                Secili lojtar fillon me 16 figura:
+                një mbret, një mbretëreshë, dy torre, dy fila,
+                dy kuaj dhe tetë pionë.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>3. ♙ Pioni</h3>
+            <p>
+                Pioni lëviz përpara dhe kap diagonalisht.
+                Nga pozicioni fillestar mund të lëvizë një ose
+                dy katrorë, nëse rruga është e lirë.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>4. ♘ Kali</h3>
+            <p>
+                Kali lëviz në formën e shkronjës L:
+                dy katrorë në një drejtim dhe një katror anash.
+                Kali mund të kërcejë mbi figura të tjera.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>5. ♗ Fili</h3>
+            <p>
+                Fili lëviz vetëm diagonalisht, për aq katrorë
+                sa është e lirë rruga. Çdo fil qëndron gjatë
+                gjithë lojës në katrorë të së njëjtës ngjyrë.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>6. ♖ Torra</h3>
+            <p>
+                Torra lëviz horizontalisht ose vertikalisht,
+                për aq katrorë sa është e lirë rruga.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>7. ♕ Mbretëresha</h3>
+            <p>
+                Mbretëresha mund të lëvizë horizontalisht,
+                vertikalisht dhe diagonalisht.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>8. ♔ Mbreti</h3>
+            <p>
+                Mbreti lëviz vetëm një katror në çdo drejtim.
+                Nuk lejohet të lëvizë në një katror ku kërcënohet
+                nga një figurë kundërshtare.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>9. ⚔️ Kapja e figurave</h3>
+            <p>
+                Një figurë kapet kur një figurë kundërshtare
+                lëviz në katrorin ku ajo ndodhet.
+                Një lojtar nuk mund të kapë figurat e veta.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>10. 👑 Shahu</h3>
+            <p>
+                Mbreti është në shah kur kërcënohet drejtpërdrejt
+                nga një figurë kundërshtare. Shahu duhet të
+                largohet me një lëvizje të ligjshme.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>11. 🏆 Shah-mati</h3>
+            <p>
+                Kur mbreti është në shah dhe nuk ka asnjë
+                lëvizje të ligjshme për të shpëtuar,
+                kemi shah-mat dhe loja përfundon.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>12. 🤝 Pat</h3>
+            <p>
+                Pat ndodh kur lojtari nuk ka asnjë lëvizje
+                të ligjshme, por mbreti i tij nuk është në shah.
+                Loja përfundon me barazim.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>13. 🔄 Rokada</h3>
+            <p>
+                Rokada është një lëvizje speciale e mbretit
+                dhe torrës. Ekziston rokada e shkurtër dhe
+                rokada e gjatë. Ajo lejohet vetëm kur plotësohen
+                të gjitha kushtet e rokadës.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>14. 🐾 Promovimi</h3>
+            <p>
+                Kur pioni arrin në rreshtin e fundit, ai duhet
+                të promovohet në mbretëreshë, torrë, fil ose kalë.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>15. ⚡ En passant</h3>
+            <p>
+                En passant është një kapje speciale e pionit.
+                Ajo lejohet vetëm në një situatë të caktuar dhe
+                duhet të bëhet menjëherë pas lëvizjes së pionit
+                kundërshtar me dy katrorë.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>16. 🚫 Lëvizjet e palejuara</h3>
+            <p>
+                Nuk lejohet të lëvizësh një figurë në mënyrë
+                të gabuar, të kalosh përmes figurave të tjera
+                përveç kalit, ose të lësh mbretin tënd në shah.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>17. 🤝 Remi / Barazimi</h3>
+            <p>
+                Loja mund të përfundojë barazim me pat,
+                marrëveshje mes lojtarëve, përsëritje të pozicionit,
+                rregullin e 50 lëvizjeve ose në raste të tjera
+                të përcaktuara nga rregullat e shahut.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>18. ⏱️ Ora e shahut</h3>
+            <p>
+                Secili lojtar ka kohën e tij. Pas lëvizjes,
+                koha kalon te kundërshtari. Kur koha përfundon,
+                lojtari humbet në kohë, sipas rregullave përkatëse.
+            </p>
+        </div>
+
+        <div class="rule-card">
+            <h3>19. 🏁 Përfundimi i lojës</h3>
+            <p>
+                Loja mund të përfundojë me shah-mat, dorëzim,
+                humbje në kohë, pat ose barazim sipas rregullave
+                të shahut.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+<!-- KËSHILLA PËR FILLESTARË -->
+
+<section id="beginnerTips">
+
+    <h2>💡 KËSHILLA PËR FILLESTARË</h2>
+
+    <div class="tips-list">
+
+        <div class="tip-item">
+            ♟️ Mëso lëvizjen e çdo figure.
+        </div>
+
+        <div class="tip-item">
+            🎯 Përpiqu të kontrollosh qendrën e tabelës.
+        </div>
+
+        <div class="tip-item">
+            ♞ Nxirr kuajt dhe filat në fillim të lojës.
+        </div>
+
+        <div class="tip-item">
+            👑 Mos e nxirr mbretëreshën shumë herët.
+        </div>
+
+        <div class="tip-item">
+            🏰 Bëj rokadë për ta mbrojtur mbretin.
+        </div>
+
+        <div class="tip-item">
+            🛡️ Mos i lër figurat pa mbrojtje.
+        </div>
+
+        <div class="tip-item">
+            👀 Para se të lëvizësh, shiko çfarë kërcënon kundërshtari.
+        </div>
+
+        <div class="tip-item">
+            🤔 Mendo pak para çdo lëvizjeje.
+        </div>
+
+        <div class="tip-item">
+            ⚔️ Mos kap një figurë pa kontrolluar nëse mund të të kapet.
+        </div>
+
+        <div class="tip-item">
+            ♟️ Luaj shpesh dhe mëso nga gabimet.
+        </div>
+
+    </div>
+
+</section>
+<!-- FOOTER -->
+
+<footer id="siteFooter">
+    ♟️ REPUBLIKA E KOSOVES 🇽🇰
+    <br>
+    <span>Dashamirët e shahut në Kosovë, Shqipëri e më gjerë</span>
+    <br>
+    <small>© 2026 ÇUBRELI CHESS KOSOVA</small>
+    <br>
+    <small>Themelues dhe krijues: Safet Neziri</small>
+</footer>
+
+</body>
+</html>
