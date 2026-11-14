@@ -1,23 +1,30 @@
-<!DOCTYPE html>
+
 <html lang="sq">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
+
 <title>ÇUBRELI CHESS KOSOVA</title>
 <style>
 #gameResult {
-font-size: 10px;
+font-size: 15px;
 font-weight: bold;
 margin: 14px 0;
+
 padding: 10px 22px;
+
 display: inline-block;
+
 border: 2px solid #ffffff;
 border-radius: 14px;
+
 background: #333333;
 color: #ffffff;
-min-height: 20px;
+
+ 
+min-height: 28px;
 box-shadow: 0 0 12px rgba(255,255,255,0.15);
+
 text-align: center;
 }
  #gameResult:empty {
@@ -32,43 +39,43 @@ body {
 }
       h1 {
     margin: 20px 0;
-    font-size: 15px;
+    font-size: 30px;
     font-weight: bold;
-    letter-spacing: 0;
+    letter-spacing: 1px;
     text-shadow:
-    2px 2px 4px #000,
-    0 0 8px rgba(255,255,255,0.15);
+        2px 2px 4px #000,
+        0 0 8px rgba(255,255,255,0.15);
 
-display: flex;
+   display: flex;
 align-items: center;
 justify-content: center;
 width: 100%;
 max-width: 100%;
-padding: 0 5px;
+padding: 0 10px;
 box-sizing: border-box;
-transform: none;
+transform: translateX(-3%);
 }
 .title-flag {
-    width: 32px;
-    height: 22px;
-    object-fit: contain;
+    width: 48px;
+    height: 34px;
+    object-fit: cover;
     flex-shrink: 0;
 }
-
-.main-title .title-flag:first-of-type {
-    margin-left: 0px;
-    margin-right: 0px;
+.main-title .title-flag:first-child {
+    margin-left: 18px;
+    margin-right: 8px;
 }
-.main-title .title-flag:last-of-type {
-    margin-left: 12px;
-    margin-right: 35px;
+
+.main-title .title-flag:last-child {
+    margin-left: 8px;
+    margin-right: 18px;
 }
 
 .main-title strong {
     text-align: center;
-    margin: 0 25px;
+    margin: 0 8px;
 }
- #subtitle {
+#subtitle {
     font-size: 17px;
     margin-top: -12px;
     margin-bottom: 12px;
@@ -82,18 +89,132 @@ transform: none;
     gap: 25px;
     margin: 20px 0 20px 150px;
 }
+#sidePanel {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
+    padding: 0 8px 8px 8px;
+    box-sizing: border-box;
+
+    margin-top: -80px;
+    margin-left: -20px;
+}
+#clockBoardArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#clockBoardArea.clock-flipped #blackClockArea {
+    order: 3;
+}
+
+#clockBoardArea.clock-flipped #whiteClockArea {
+    order: 1;
+}
+
+    #blackClockArea {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #b98f58;
+}
+
+ 
+#whiteClockArea {
+    order: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#blackFirstMove,
+#whiteFirstMove {
+    width: 38px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #222;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#blackClock {
+    order: 1;
+    color: #b98f58;
+}
+
+#whiteClock {
+    order: 1;
+    color: #b98f58;
+}
+
+#gameResult {
+    order: 2;
+}
+ 
+#gameArea {
+    order: 2;
+}
+ #board {
+    width: 520px;
+    height: 520px;
+    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(8, 65px);
+    grid-template-rows: repeat(8, 65px);
+    border: 5px solid #d4af37;
+border-radius: 8px;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: none;
+    box-sizing: content-box;
+}
+#board.board-flipped {
+    transform: rotate(180deg);
+}
+
+#board.board-flipped .square {
+    transform: rotate(180deg);
+}
+.square {
+    width: 65px;
+    height: 65px;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 56px;
+    cursor: pointer;
+}
+
+.light {
+    background: #b98f58;
+}
+
+.dark {
+    background: #684526;
+}
 
 .white-piece {
     color: #ffffff;
 
     text-shadow:
-    2px 0 0 #000,
-   -2px 0 0 #000,
-    0 2px 0 #000,
-    0 -2px 0 #000,
-    1px 1px 2px #000,
-    0 0 50px #000;
+        2px 0 0 #000,
+        -2px 0 0 #000,
+        0 2px 0 #000,
+        0 -2px 0 #000,
+        1px 1px 2px #000,
+        0 0 50px #000;
 }
 
 .black-piece {
@@ -194,15 +315,7 @@ box-shadow: inset 0 0 0 2px rgba(255, 0, 0, 0.3);
     bottom: auto;
     left: auto;
 }
-/* RROTULLIMI I TABELËS DHE FIGURAVE */
-#board.board-flipped {
-    transform: rotate(180deg);
-}
-
-#board.board-flipped .square {
-    transform: rotate(180deg);
-}
- #newGameButton {
+#newGameButton {
     width: 38px;
     height: 30px;
     margin: 10px 0 20px 0;
@@ -216,107 +329,54 @@ box-shadow: inset 0 0 0 2px rgba(255, 0, 0, 0.3);
     color: #fff;
     box-sizing: border-box;
     box-shadow: 0 0 8px rgba(255,255,255,0.15);
-    transform: translateY(-40px);
-margin: 0 0 5px 0;
+    transform: translateY(50px);
 } 
 
 #newGameButton:hover {
     background: #28a745;
 }
 #moveHistory {
-    width: 180px;
-    min-width: 180px;
-    max-width: 180px;
-
-    height: 300px;
-    min-height: 300px;
-    max-height: 300px;
-
+    width: 100%;
     box-sizing: border-box;
     font-size: 12px;
     line-height: 1.25;
 
-    margin-top: -40px;
-    padding: 5px;
+    margin-top: 40px;
 
+    max-height: 300px;
     overflow-y: auto;
     overflow-x: hidden;
 
+    padding: 5px;
+
     border: 2px solid #ffffff;
     border-radius: 10px;
-
-flex-shrink: 0;
 }
-/* TABELA NE KOMPJUTER */
-@media (min-width: 601px) {
-    #board {
-        width: 520px;
-        height: 520px;
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        grid-template-rows: repeat(8, 1fr);
-        border: 7px solid #111 !important;
-        outline: 3px solid #d4af37 !important;
-        outline-offset: 3px !important;
-        box-sizing: border-box;
-        box-shadow: none !important;
-        margin: 0 auto !important;
-    }
-    .square {
-     width: 100%;
-     height: 100%;
- 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      font-size: 56px;
-    }
 
-    .light {
-        background: #ddd3c4;
-    }
-
-    .dark {
-        background: #9b7048;
-    }
-
-    .white-piece,
-    .black-piece {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 56px;
-        line-height: 1;
-    }
-}
 @media (max-width: 600px) {
-    #gameArea {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin: 10px auto;
-        width: 100%;
-    }
 
-    #sidePanel {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
+  #gameArea {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 10px auto;
+  width: 100%;
+ } 
+#sidePanel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
  #board {
-    display: grid;
     width: min(500px, 92vw);
     height: min(500px, 92vw);
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
 
-    border: 7px solid #111 !important;
+    border: 4px solid #d4af37 !important;
     border-style: solid !important;
-    outline: 3px solid #d4af37 !important;
-    outline-offset: 3px;
+    outline: none !important;
     box-shadow: none !important;
 
     margin: 15px 0 0 0;
@@ -383,16 +443,7 @@ flex-shrink: 0;
     padding: 6px 10px;
     color: #b98f58 !important;
 }
-@media (min-width: 601px) {
-    #blackClock,
-    #whiteClock {
-        width: 150px !important;
-        max-width: 150px !important;
-        box-sizing: border-box;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
+
 #moveHistory {
 width: min(500px, 92vw);
 height: 220px;
@@ -414,7 +465,7 @@ overflow-y: auto;
     line-height: 1.7;
 
     box-shadow:
-    0 0 8px rgba(255,255,255,0.15);
+        0 0 8px rgba(255,255,255,0.15);
 
     scrollbar-width: thin;
 }
@@ -432,28 +483,73 @@ overflow-y: auto;
     letter-spacing: 0.3px;
 }
 #blackClock,
+    
 #whiteClock {
     font-size: 22px;
     font-weight: bold;
     margin: 8px auto;
     padding: 6px 12px;
     display: block;
-    width: 150px !important;
-    max-width: 150px !important;
+    width: 190px;
     box-sizing: border-box;
-    border: none !important;
+
+    border: 2px solid #fff;
+    border-radius: 8px;
+
     background: #333;
     color: #fff;
+
     white-space: nowrap;
+
     text-align: center;
-    text-shadow: 0 0 2px #fff;
-    box-shadow: 0 0 8px rgba(255,255,255,0.15);
+
+    text-shadow:
+        0 0 2px #fff;
+
+    box-shadow:
+        0 0 8px rgba(255,255,255,0.15);
 }
 .clock-active {
     background: #555 !important;
     border: 2px solid #66b3ff !important;
     border-radius: 8px !important;
     box-shadow: 0 0 12px 3px rgba(102, 179, 255, 0.45);
+} 
+#blackFirstMove.first-move-danger,
+#whiteFirstMove.first-move-danger {
+    color: #fff !important;
+    background: #222 !important;
+    border: 2px solid #ff2222 !important;
+    font-weight: bold;
+    text-shadow:
+        0 0 4px #ff2222;
+    box-shadow:
+        0 0 7px rgba(255, 34, 34, 0.9),
+        0 0 12px rgba(255, 34, 34, 0.5);
+}
+.main-title {
+    font-size: 21px;
+    transform: translateX(15px);
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+overflow: hidden;
+}
+
+.main-title strong {
+    margin: 0 4px 0 4px;
+    white-space: nowrap;
+}
+
+.title-flag {
+    width: 38px;
+    height: 27px;
+}
+
+#subtitle {
+    font-size: 14px;
+    transform: translateX(0);
 }
 #blackFirstMove.first-move-danger,
 #whiteFirstMove.first-move-danger {
@@ -469,59 +565,7 @@ overflow-y: auto;
 }
 .main-title {
     font-size: 21px;
-    transform: none;
-    padding: 0;
-    width: 100%;
-    box-sizing: border-box;
-   text-align: left; 
-overflow: visible;
-}
-
-.main-title strong {
-    margin: 0 4px 0 4px;
-    white-space: nowrap;
-}
-
-.title-flag {
-    width: 38px;
-    height: 27px;
-}
- .chess-logo {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-vertical-align: middle;
-width: 54px;
-height: 54px;
-margin: 0 5px;
-flex-shrink: 0;
-color: #D4AF37;
-font-size: 42px;
-line-height: 1;
- }
-.chess-queen {
-    display: inline-block;
-    color: #D4AF37 !important;
-    -webkit-text-fill-color: #D4AF37 !important;
-    font-size: 70px !important;
-    line-height: 1;
-    margin-right: 12px;
-    text-shadow: 0 0 3px #D4AF37;
-}
- #blackFirstMove.first-move-danger,
-#whiteFirstMove.first-move-danger {
-    color: #fff !important;
-    background: #222 !important;
-    border: 2px solid #ff2222 !important;
-    font-weight: bold;
-    text-shadow:
-        0 0 4px #ff2222;
-    box-shadow:
-        0 0 7px rgba(255, 34, 34, 0.9),
-        0 0 12px rgba(255, 34, 34, 0.5);
-}
-.main-title {
-    font-size: 21px;
+    transform: translateX(0);
     padding: 0 4px;
 }
 
@@ -539,45 +583,6 @@ line-height: 1;
     font-size: 14px;
     transform: translateX(0);
 }
-@media (min-width: 700px) {
-    .main-title {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 10px;
-        transform: none;
-        padding-left: 0px;
-padding-right: 10px;
-        overflow: visible;
-        font-size: 24px !important;
-    }
-     .main-title strong {
-       white-space: nowrap;
-       font-size: 24px !important;
- }
-    
- .king-emblem {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        margin: 0 5px;
-        flex-shrink: 0;
-        font-family: "Times New Roman", serif;
-        font-size: 48px;
-        line-height: 1;
-        color: #D4AF37;
-        text-shadow: 1px 2px 3px #000;
-    } 
- 
- .title-flag {
-        width: 32px;
-        height: 23px;
-        flex-shrink: 0;
-    }
-}
- 
  /* ALARMI I KUQ - 10 SEKONDAT E FUNDIT */
 
 #whiteClock.clock-danger,
@@ -720,78 +725,51 @@ min-height: 130px;
 }
 
 .promotion-piece {
-    width: 104px;
-    height: 104px;
+    width: 72px;
+    height: 72px;
     padding: 0;
     border: 2px solid #777;
     border-radius: 7px;
     background: #eee;
     font-family: "Times New Roman", serif;
-    font-size: 76px;
+    font-size: 52px;
     cursor: pointer;
 }
-
- @media (min-width: 601px) {
+@media (min-width: 601px) {
     .promotion-box {
-        gap: 12px;
+        gap: 22px;
         padding: 22px;
-        min-width: 520px;
-        min-height: 160px;
+        min-width: 350px;
+        min-height: 135px;
     }
 
- .promotion-piece {
-    width: 42px !important;
-    height: 42px !important;
-    padding: 0;
-    font-size: 32px !important;
-    flex: 0 0 42px !important;
-    box-sizing: border-box;
-}
-}     
-/* QENDRIMI I TITULLIT NE KOMPJUTER */
-@media (min-width: 700px) {
-.main-title {
-width: 100%;
-box-sizing: border-box;
-justify-content: flex-start;
-margin-left: 0;
-margin-right: 0;
-padding-left: 0px;
-}
-.main-title .title-flag:first-of-type {
- margin-left: 0;
- margin-right: 4px;
- }
-
-    .main-title .title-flag:last-of-type {
-        margin-left: 4px;
-        margin-right: 0;
+    .promotion-piece {
+        width: 76px;
+        height: 76px;
+        font-size: 56px;
     }
-.main-title strong {
-    margin-left: 4px;
-    margin-right: 4px;
-}
 }
  /* PROMOVIMI NE TELEFON */
 
 @media (max-width: 600px) {
     .promotion-box {
-        gap: 8px;
-        padding: 10px;
+        gap: 1px;
+        padding: 2px;
         min-width: 0;
         min-height: 0;
         width: max-content;
-        max-width: 100%;
-        transform: none;
+        max-width: none;
+        transform: scale(0.7);
+        transform-origin: top left;
         box-sizing: border-box;
     }
 
     .promotion-piece {
-        width: 70px;
-        height: 70px;
+        width: 34px;
+        height: 40px;
         padding: 0;
-        font-size: 52px;
-        flex: 0 0 70px;
+        font-size: 27px;
+        flex: 0 0 34px;
         box-sizing: border-box;
     }
 }
@@ -803,72 +781,13 @@ padding-left: 0px;
 #whiteClock {
 color: #66b3ff !important;
 }
-
-/* RREGULLIMI NË KOMPJUTER */
-@media (min-width: 601px) {
-
-   #clockBoardArea {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: fit-content;
-    margin: 0 auto;
+#blackClock,
+#whiteClock {
+    border: 2px solid #ffffff !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
 }
-
- #gameArea {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 0;
-    width: fit-content;
-    margin: 20px 0;
-}
-
-    #board {
-        flex-shrink: 0;
-    }
-#sidePanel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    width: 180px;
-    flex-shrink: 0;
-    margin-left: -25px;
-}
-
-#newGameButton {
-    order: 1;
-    margin: 0 auto;
-}
-
-#moveHistory {
-    order: 2;
-    width: 300px;
-    max-width: 300px;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-#blackClockArea,
-#whiteClockArea {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: auto;
-    margin: 8px auto;
-}
-
-#blackClockArea #blackFirstMove,
-#whiteClockArea #whiteFirstMove {
-    margin: 0;
-    flex-shrink: 0;
-}
-}
- @media (max-width: 600px) {
+@media (max-width: 600px) {
 
     #clockBoardArea {
         display: flex;
@@ -899,13 +818,21 @@ color: #66b3ff !important;
 }
 #blackClock,
 #whiteClock {
-    width: 110px !important;
+    width: 190px !important;
     font-size: 22px !important;
     padding: 6px 12px !important;
     margin: 8px auto !important;
 }
- 
- /* KËTU FILLON PJESA E RE PËR TELEFON */
+#whiteClock.clock-active,
+#blackClock.clock-active {
+    border: 3px solid #66b3ff !important;
+    border-radius: 8px !important;
+    box-shadow:
+        0 0 8px #66b3ff,
+        0 0 18px #66b3ff !important;
+}
+
+/* KËTU FILLON PJESA E RE PËR TELEFON */
 
 @media (max-width: 600px) {
 
@@ -913,15 +840,15 @@ color: #66b3ff !important;
     display: grid;
     grid-template-columns: 70px 1fr 150px;
     grid-template-areas:
-    "blackFirst blackClock newGame"
-    "board board board"
-    "whiteFirst whiteClock whiteClock"
-    "moveHistory moveHistory moveHistory";
+        "blackFirst blackClock newGame"
+        "board board board"
+       "whiteFirst whiteClock whiteClock"
+"moveHistory moveHistory moveHistory"; 
     align-items: end;
     justify-items: center;
     width: 100%;
     gap: 8px;
-transform: translateX(0);
+transform: translateX(-10px);
    } 
 
     #gameArea,
@@ -956,6 +883,7 @@ transform: translateX(0);
 #newGameButton {
     align-self: center !important;
 }
+
 #blackFirstMove,
 #blackClock {
     transform: translateX(50px);
@@ -979,6 +907,7 @@ transform: translateX(0);
 #whiteFirstMove {
     transform: translate(50px, -6px);
 }
+
 #whiteClock {
     transform: translateX(-20px);
 }
@@ -1003,186 +932,72 @@ transform: translateX(0);
 
 #clockBoardArea.clock-flipped #whiteClock {
     grid-area: blackClock;
-}
-#whiteClock.clock-active.clock-danger,
-#blackClock.clock-active.clock-danger {
-    border: 3px solid #ff2222 !important;
-    background: #222 !important;
-    color: #fff !important;
-    box-shadow:
-        0 0 8px #ff2222 !important,
-        0 0 18px #ff2222 !important,
-        0 0 30px rgba(255, 34, 34, 0.8) !important;
+    transform: translateX(50px);
 }
 
-#blackFirstMove {
-    grid-area: blackFirst;
-}
+#clockBoardArea.clock-flipped #blackClock {
+    grid-area: whiteClock;
+    transform: translateX(-20px);
+}    
+  #whiteClock.clock-active.clock-danger,
+    #blackClock.clock-active.clock-danger {
+        border: 3px solid #ff2222 !important;
+        background: #222 !important;
+        color: #fff !important;
+        box-shadow:
+            0 0 8px #ff2222 !important,
+            0 0 18px #ff2222 !important,
+            0 0 30px rgba(255, 34, 34, 0.8) !important;
+    }
 
-.light.selected,
-.dark.selected {
-    background: rgba(255, 215, 80, 0.55) !important;
-    box-shadow:
-        inset 0 0 0 3px rgba(255, 255, 255, 0.75),
-        inset 0 0 10px rgba(0, 0, 0, 0.25) !important;
-}
+    /* FIGURA E ZGJEDHUR */
+    .light.selected,
+    .dark.selected {
+        background: rgba(255, 215, 80, 0.55) !important;
 
-/* RREGULLIMI I ORËVE KUR TABELA RROTULLOHET */
-#clockBoardArea.clock-flipped #blackClock,
-#clockBoardArea.clock-flipped #whiteClock,
-#clockBoardArea.clock-flipped #blackFirstMove,
-#clockBoardArea.clock-flipped #whiteFirstMove {
-    transform: none !important;
-}
+        box-shadow:
+            inset 0 0 0 3px rgba(255, 255, 255, 0.75),
+            inset 0 0 10px rgba(0, 0, 0, 0.25) !important;
+    }
+
 } 
-/* RREGULLIMI STATIK NË KOMPJUTER */
-@media (min-width: 601px) {
-
-    #gameArea {
-        display: flex !important;
-        align-items: flex-start !important;
-        justify-content: center !important;
-        gap: 25px !important;
-    }
-
-    #board {
-        flex: 0 0 520px !important;
-    }
-
-    #sidePanel {
-        display: flex !important;
-        flex: 0 0 300px !important;
-        width: 300px !important;
-        min-width: 300px !important;
-        max-width: 300px !important;
-        align-items: stretch !important;
-    }
-
-    #moveHistory {
-        display: block !important;
-        flex: 0 0 300px !important;
-        width: 300px !important;
-        min-width: 300px !important;
-        max-width: 300px !important;
-        height: 300px !important;
-        min-height: 300px !important;
-        max-height: 300px !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        box-sizing: border-box !important;
-    }
-
-#blackClockArea,
-#whiteClockArea {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    width: max-content !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    flex-wrap: nowrap !important;
-    padding: 0 !important;
-}
-
-#blackClock,
-#whiteClock {
-    width: 110px !important;
-    min-width: 110px !important;
-    max-width: 110px !important;
-    height: 30px !important;
-    min-height: 30px !important;
-    margin: 0 !important;
-    padding: 3px 8px !important;
-    line-height: 1 !important;
-    box-sizing: border-box !important;
-}
-
-#blackFirstMove,
-#whiteFirstMove {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 45px !important;
-    min-width: 45px !important;
-    color: #ffffff !important;
-    font-size: 18px !important;
-    text-align: center !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    flex-shrink: 0 !important;
-}
-@media (min-width: 601px) {
-    #gameArea {
-       justify-content: flex-start !important; 
-    }
-
-    #board {
-        margin: 0 !important;
-        flex: 0 0 520px !important;
-    }
-}
-/* SHFAQ NUMRAT 25 NË KOMPJUTER */
-@media screen and (min-width: 601px) {
-#blackFirstMove,
-#whiteFirstMove {
-visibility: visible !important;
-display: block !important;
-opacity: 1 !important;    
-width: 45px !important;
-min-width: 45px !important;
-margin: 0 !important;
-padding: 0 !important;
-border: none !important;
-box-shadow: none !important;
-overflow: visible !important;
-text-align: center !important;
-  }
-}
-/* FSHEH RREGULLAT POSHTË TABELËS - VETËM KOMPJUTER */
-@media screen and (min-width: 601px) {
-    #chessRules {
-        display: none !important;
-    }
-}
 </style>
+
 </head>
+
 <body>
-<h1 class="main-title">
-  <img class="title-flag" src="https://flagcdn.com/w80/al.png" alt="Flamuri i Shqipërisë">
-  <strong>ÇUBRELI CHESS KOSOVA</strong>
-  <img class="title-flag" src="https://flagcdn.com/w80/xk.png" alt="Flamuri i Kosovës">
+ <h1 class="main-title">
+    <img class="title-flag" src="https://flagcdn.com/w80/al.png" alt="Flamuri i Shqipërisë">
+    <strong>SHAPETA CHESS KOSOVA</strong>
+    <img class="title-flag" src="https://flagcdn.com/w80/xk.png" alt="Flamuri i Kosovës">
 </h1>
 <div id="subtitle">Dashamirët e shahut në Kosovë, Shqipëri e më gjerë</div>
-
 <div id="clockBoardArea">
-<div id="blackClockArea">
-<div id="blackFirstMove">25</div>
-<div id="blackClock">05:00</div>
+ <div id="blackClockArea">
+ <div id="blackFirstMove">25</div>
+<div id="blackClock">ZI: 05:00</div>
 </div>
-<div id="gameResult"></div>
+    <div id="gameResult"></div>
 
-<div id="gameArea">
+ <div id="gameArea">
 
 <div id="board"></div>
 
 <div id="sidePanel">
 
-<button id="newGameButton">🔄</button>
+    <button id="newGameButton">🔄</button>
 
-<div id="moveHistory">
-<strong>LËVIZJET</strong>
-</div>
+    <div id="moveHistory">
+        <strong>LËVIZJET</strong>
+    </div>
 
 </div>  
 
 </div> 
 
-<div id="whiteClockArea">
-<div id="whiteClock">05:00</div> 
-<div id="whiteFirstMove">25</div>
+  <div id="whiteClockArea">
+    <div id="whiteClock">BARDHI: 05:00</div>
+    <div id="whiteFirstMove">25</div>
 </div>
 </div>
 <script>
@@ -1258,10 +1073,10 @@ function formatTime(seconds) {
 function updateClocks() {
 
     document.getElementById("whiteClock").textContent =
-        formatTime(whiteTime);
+        "I BARDHI: " + formatTime(whiteTime);
 
     document.getElementById("blackClock").textContent =
-        formatTime(blackTime);
+        "I ZIU: " + formatTime(blackTime);
 
 
    /* HIQ NGJYRAT E VJETRA */
@@ -1278,16 +1093,30 @@ document.getElementById("whiteClock")
     .style.removeProperty("box-shadow");
 /* ORA AKTIVE */
 
-const clock = document.getElementById(
-    whiteTurn ? "whiteClock" : "blackClock"
-);
+if (whiteTurn) {
 
-clock.classList.add("clock-active");
+    const clock = document.getElementById("whiteClock");
 
-if (window.matchMedia("(min-width: 601px)").matches) {
-    clock.style.setProperty("border", "none", "important");
-    clock.style.setProperty("box-shadow", "none", "important");
+    clock.classList.add("clock-active");
+
+    clock.style.setProperty(
+        "border",
+        "3px solid #72c98a",
+        "important"
+    );
+
+    clock.style.setProperty(
+        "box-shadow",
+        "0 0 6px #8acfa0, 0 0 12px #72c98a",
+        "important"
+    );
+
 } else {
+
+    const clock = document.getElementById("blackClock");
+
+    clock.classList.add("clock-active");
+
     clock.style.setProperty(
         "border",
         "3px solid #72c98a",
@@ -1344,11 +1173,8 @@ if (!whiteTurn && blackTime <= 10) {
 }
 function updateFirstMoveClock() {
 
-    if (window.matchMedia("(min-width: 601px)").matches) {
-        document.getElementById("whiteFirstMove").style.display = "none";
-        document.getElementById("blackFirstMove").style.display = "none";
-        return;
-    }
+    document.getElementById("whiteFirstMove").textContent =
+        whiteFirstMoveTime;
 
     document.getElementById("blackFirstMove").textContent =
         blackFirstMoveTime;
@@ -1423,62 +1249,83 @@ function updateFirstMoveClock() {
 
 function startFirstMoveClock() {
 
-    /* NDALO NUMËRIMIN NË KOMPJUTER */
-    if (window.matchMedia("(min-width: 601px)").matches) {
-        return;
-    }
-
     if (firstMoveInterval !== null) {
         return;
     }
 
+
     firstMoveInterval = setInterval(function () {
 
         if (gameOver) {
+
             clearInterval(firstMoveInterval);
             firstMoveInterval = null;
+
             return;
         }
 
+
         /* BARDHI */
-        if (whiteTurn && !whiteFirstMoveDone) {
+
+        if (
+            whiteTurn &&
+            !whiteFirstMoveDone
+        ) {
+
             whiteFirstMoveTime--;
+
             updateFirstMoveClock();
 
+
             if (whiteFirstMoveTime <= 0) {
+
                 clearInterval(firstMoveInterval);
                 firstMoveInterval = null;
+
                 gameOver = true;
 
                 document.getElementById("gameResult")
                     .classList.add("checkmate-result");
 
-                document.getElementById("gameResult").textContent =
+                document.getElementById("gameResult")
+                    .textContent =
                     "🏆 KOHA MBAROI! FITON LOJTARI I ZI!";
 
                 return;
             }
         }
 
+
         /* ZI */
-        if (!whiteTurn && !blackFirstMoveDone) {
+
+        if (
+            !whiteTurn &&
+            !blackFirstMoveDone
+        ) {
+
             blackFirstMoveTime--;
+
             updateFirstMoveClock();
 
+
             if (blackFirstMoveTime <= 0) {
+
                 clearInterval(firstMoveInterval);
                 firstMoveInterval = null;
+
                 gameOver = true;
 
                 document.getElementById("gameResult")
                     .classList.add("checkmate-result");
 
-                document.getElementById("gameResult").textContent =
+                document.getElementById("gameResult")
+                    .textContent =
                     "🏆 KOHA MBAROI! FITON LOJTARI I BARDHË!";
 
                 return;
             }
         }
+
 
     }, 1000);
 }
@@ -1680,19 +1527,18 @@ function showPromotionChoice(isWhite, targetSquare) {
         overlay.className = "promotion-overlay";
 
         const box = document.createElement("div");
-        box.style.cssText = "display:flex;gap:6px;padding:8px;min-width:0;width:max-content;box-sizing:border-box;";
-     box.className = "promotion-box";
+        box.className = "promotion-box";
         box.style.position = "fixed";
-const pieces = isWhite
+
+        const pieces = isWhite
             ? ["♕", "♖", "♗", "♘"]
             : ["♛", "♜", "♝", "♞"];
 
         pieces.forEach(function(piece) {
 
-         const button = document.createElement("button");
-         button.className = "promotion-piece";
-         button.style.cssText = "width:55px;height:55px;font-size:42px;flex:0 0 55px;";
-         button.textContent = piece;
+            const button = document.createElement("button");
+            button.className = "promotion-piece";
+            button.textContent = piece;
 
             button.addEventListener("click", function() {
                 overlay.remove();
@@ -3907,6 +3753,7 @@ clockStarted = false;
 clearInterval(clockInterval);
 clockInterval = null;
 updateClocks();
+
 /* RESET 25 SEKONDAT E LËVIZJES SË PARË */
 
 clearInterval(firstMoveInterval);
@@ -4186,11 +4033,11 @@ rulesGrid.classList.toggle("rules-open");
 <!-- FOOTER -->
 
 <footer id="siteFooter">
-    ♟️ REPUBLIKA E KOSOVES 🇽🇰
+    ♟️ SHAPETA CHESS KOSOVA 🇽🇰
     <br>
     <span>Dashamirët e shahut në Kosovë, Shqipëri e më gjerë</span>
     <br>
-    <small>© 2026 ÇUBRELI CHESS KOSOVA</small>
+    <small>© 2026 SHAPETA CHESS KOSOVA</small>
     <br>
     <small>Themelues dhe krijues: Safet Neziri</small>
 </footer>
